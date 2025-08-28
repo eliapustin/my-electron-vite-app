@@ -1,11 +1,14 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
+import {UdpServer} from './udp-server'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
 }
+
+let udpServer;
 
 const createWindow = () => {
   // Create the browser window.
@@ -25,7 +28,13 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
+
+  // Инициализируем UDP сервер после загрузки окна
+  mainWindow.webContents.on('did-finish-load', () => {
+    udpServer = new UdpServer(mainWindow);
+    udpServer.start();
+  })
 };
 
 // This method will be called when Electron has finished
@@ -50,7 +59,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+  if (udpServer) {
+    udpServer.stop();
+  }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
