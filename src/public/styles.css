@@ -1,0 +1,343 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(circle at 50% 25%, #9bb5ba, #7e93a5, #182d3f);
+    /* background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%); */
+    /* background-image: linear-gradient(to right, #74ebd5 0%, #9face6 100%); */
+    /* background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%); */
+    /* background-image: linear-gradient(to top, #6a85b6 0%, #bac8e0 100%); */
+    /* background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%); */
+    
+}
+
+header, footer {
+    padding: 1rem;
+}
+
+footer {
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+header {
+    /* color: #129BF9; */
+    color: white;
+    text-shadow: 1px 1px 1px #0a4872;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 10px 16px rgba(0,0,0,0.1);
+    text-align: center;
+    display: grid;
+    grid-template-columns: 100px 1fr 100px;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+header {
+    justify-content: center; /* Центрирует весь контент */
+    text-align: center;
+}
+h1 {
+    flex-grow: 1; /* Занимает оставшееся пространство */
+}
+
+
+.logo {
+    grid-column: 1;
+}
+
+.logo img {
+    height: auto;
+    max-width: 100px; /* Опционально: контроль размера */
+}
+
+.title {
+    grid-column: 2;
+    text-align: center;
+    margin: 0;
+}
+
+.header-spacer {
+    grid-column: 3;
+}
+
+.container {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+.left-column, .right-column {
+    flex: 0 0 300px;
+    /* background-color: rgba(0, 0, 0, 0.3); */
+    /* box-shadow: 0px 10px 16px rgba(0,0,0,0.1); */
+    padding: 1rem;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.main-content {
+    flex: 1;
+    padding: 1rem;
+    min-width: 300px;
+    min-width: 0;
+}
+
+footer {
+    margin-top: auto;
+}
+
+#drone-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    flex: 1; /* Занимает все доступное пространство */
+    min-height: 500px; /* Минимальная высота */
+}
+
+#drone-container canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#mode {
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+}  
+
+#connection-status {
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+}  
+
+#info {
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+}  
+
+#controls {
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+} 
+
+#mavlink-info {
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#mavlink-info > div {
+    margin-top: 10px;
+    padding-top: 0px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#mavlink-info > div:first-child {
+    border-top: none;
+    margin-top: 0;
+}
+
+.control-group {
+    margin-bottom: 15px;
+}
+.control-group h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+.control-save-settings {
+    text-align: center;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.slider-container label {
+    width: 60px;
+    margin-right: 20px;
+}
+.slider-container input {
+    flex-grow: 1;
+}
+.slider-container span {
+    width: 50px;
+    text-align: right;
+    margin-left: 10px;
+}
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.toggle-switch label {
+    margin-right: 10px;
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 30px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: #2196F3;
+}
+input:checked + .slider:before {
+    transform: translateX(30px);
+}
+#save-settings, #load-settings {
+    padding: 8px 15px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    margin: 5px;
+}
+
+#save-settings:hover, #load-settings:hover {
+    background-color: #0b7dda;
+}
+
+#learning-content {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    color: white;
+    background: rgba(0, 0, 0, 0.3);
+    /* background: radial-gradient(circle at 50%, #3e414b, #45505a71, #1b2024); */
+    border-radius: 5px;
+}
+
+#learning-image {
+    max-width: 100%;
+    max-height: 70vh;
+    display: block;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.part-button {
+    padding: 8px 15px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    margin: 5px;
+    min-width: 268px;
+}
+
+/* .part-button {
+    display: block;
+    margin: 5px 0;
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.part-button:hover {
+    background-color: #45a049;
+} */
+
+
+.part-button:hover {
+    background-color: #0b7dda;
+}
+
+.part-button-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .left-column, .right-column {
+        flex: 1;
+        order: 1;
+    }
+    
+    .main-content {
+        order: 0;
+    }
+
+    .title {
+        font-size: 1.2rem;
+    }
+
+    .logo img {
+        width: 80px;
+    }
+    
+    .header-spacer {
+        width: 80px;
+    }
+}
