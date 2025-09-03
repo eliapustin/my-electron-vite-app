@@ -1,12 +1,13 @@
 const dgram = require('dgram')
-const clients = new Set();
+// const clients = new Set();
+const { ipcMain } = require('electron')
 
 const UDP_PORT = 14550;
 
 /**
  * Создает класс UDP-сервера
  */
-export class UdpServer {
+export class UDPServer {
     /**
      * 
      * @param {*} mainWindow 
@@ -29,13 +30,13 @@ export class UdpServer {
             try {
                 const data = parseMAVLink(msg);
                 if (data && this.mainWindow) {
-                    const jsonData = JSON.stringify(data);
-                    clients.forEach(client => {
-                        if (client.readyState === WebSocket.OPEN) {
-                            client.send(jsonData);
-                        }
-                    })
-                    // this.mainWindow.webContents.send('mavlink-data', data);
+                    // const jsonData = JSON.stringify(data);
+                    // clients.forEach(client => {
+                    //     if (client.readyState === WebSocket.OPEN) {
+                    //         client.send(jsonData);
+                    //     }
+                    // })
+                    this.mainWindow.webContents.send('mavlink-data', data);
                 }
             } catch (e) {
                 console.error(`Error parsing mavlink message:`, e);
