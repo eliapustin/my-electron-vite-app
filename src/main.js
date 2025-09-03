@@ -1,7 +1,8 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import {UDPServer} from './udp-server/udp-server'
+import { label } from 'three/tsl';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -9,10 +10,11 @@ if (started) {
 }
 
 let udpServer;
+let mainWindow;
 
 const createWindow = () => {
   // Создаем окно браузера
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -43,6 +45,10 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow();
 
+  // Создаем меню
+  const mainMenu = Menu.buildFromTemplate(menu);
+  Menu.setApplicationMenu(mainMenu)
+
   // На ОС X этот метод пересоздает окно при нажатии на 
   // иконку в doc и в случае, если нет других открытых окон.
   app.on('activate', () => {
@@ -51,6 +57,49 @@ app.whenReady().then(() => {
     }
   });
 });
+
+
+// Создаем опции для меню
+const menu = [
+      {
+        label: 'Файл',
+        submenu: [
+          {
+            label: 'Выйти',
+            click: () => app.quit()
+          }
+        ]
+      },
+      {
+        label: 'Режим',
+        submenu: [
+          {
+            label: 'Обучение',
+            // click: () => app.quit()
+          },
+          {
+            label: 'Полёт',
+            submenu: [
+              {
+                label: 'Автоматический'
+              },              
+              {
+                label: 'Ручной'
+              }
+            ]
+          }
+        ]
+      },
+      {
+        label: 'Помощь',
+        submenu: [
+          {
+            label: 'О программе'
+            // click: открыть окно с описанием программы
+          }
+        ]
+      }
+]
 
 // Выход из приложения при закрытии всех окон. Работает на всех ОС кроме macOS.
 // В macOS, даже при закрытии всех окон приложение все равно остается активным,
