@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .dock-container {
+            display: flex;
+            height: 100vh;
+        }
+        .dock-panel {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            margin: 5px;
+            position: relative;
+        }
+        .dock-left { width: 200px; }
+        .dock-right { width: 250px; }
+        .dock-bottom { height: 150px; width: 100%; }
+        .dock-handle {
+            cursor: move;
+            background: #ddd;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dock-container">
+        <div class="dock-panel dock-left" id="left-panel">
+            <div class="dock-handle">Левая панель</div>
+            <div>Содержимое левой панели</div>
+        </div>
+        
+        <div class="dock-panel" style="flex: 1;">
+            Основное содержимое
+        </div>
+        
+        <div class="dock-panel dock-right" id="right-panel">
+            <div class="dock-handle">Правая панель</div>
+            <div>Содержимое правой панели</div>
+        </div>
+    </div>
+
+    <script src="docking.js"></script>
+</body>
+</html>
