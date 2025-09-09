@@ -36,7 +36,7 @@ function createMainWindow() {
   }
 
   // Открываем окно разработчика (если требуется).
-  mainWindow.webContents.openDevTools();
+  // if (isDev) mainWindow.webContents.openDevTools();
 
   // Инициализируем UDP сервер после загрузки окна.
   mainWindow.webContents.on('did-finish-load', () => {

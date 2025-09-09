@@ -8,16 +8,30 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
+    <!-- <header>
         <div class="logo">
             <img src="src/public/images/logo_white_ru.png" alt="Логотип" width="100">
         </div>
         <h1 class="title">Учебный тренажер Пчелка</h1>
-        <div class="header-spacer"></div> <!-- Пустой элемент для баланса -->
-    </header>
+        <div class="header-spacer"></div>  -->
+        <!-- Пустой элемент для баланса -->
+    <!-- </header> -->
+
     
     <div class="container">
-        <aside class="left-column">
+        
+        <div class="activity-bar left">
+            <div class="icon" data-id="settings">🧭</div>
+            <div class="icon" data-id="mode">🔍</div>
+        </div>
+
+        <div>
+            <p>Настройки</p>
+            <p>Полет</p>
+            <p>Обучение</p>
+        </div>
+
+        <div class="sidebar-left">
             <div id="mode">
                 <div class="toggle-switch">
                     <label style="min-width: 80px;">Режим:</label>
@@ -180,7 +194,7 @@
                     <button id="load-settings">Загрузить</button>
                 </div>
             </div>
-        </aside>
+        </div>
         
         <main class="main-content">            
             <div id="drone-container">   
@@ -191,7 +205,7 @@
             </div>
         </main>
         
-        <aside class="right-column">
+        <div class="sidebar-right">
             <!-- <div id="info">
                 <h3>Положение дрона</h3>
                 <p>Крен: <span id="roll">0.00</span>°</p>
@@ -245,7 +259,7 @@
                 <p>Высота: <span id="altitude">0.00</span> m</p>
                 <p>Скорость набора: <span id="climb">0.00</span> m/s</p>
             </div>
-        </aside>
+        </div>
     </div>
     
     <footer>
