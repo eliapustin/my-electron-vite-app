@@ -3,19 +3,18 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;    
-    /* background: #21223a;   */
-    font-family: Tilda Sans;
+    font-family: Tilda Sans, Tahoma;
     /* font-family: Tilda Sans; */
     color: whitesmoke;
 }
 
 body {
     /* font-family: Arial, sans-serif; */
-    min-height: 100vh;
+    min-height: 50vh;
+    height: auto;
     display: flex;
     flex-direction: column;
-    /* background: #21223a;     */
-    background: radial-gradient(circle at 50% 25%, #5e78ac, #182d3f);   
+    /* background: radial-gradient(circle at 50% 25%, #5e78ac, #182d3f);    */
 }
 
 header, footer {
@@ -53,7 +52,7 @@ h1 {
 .activity-bar-left {
     flex-direction: column;
     background: #21223a;
-    width: 48px;
+    width: auto;
     border-right: 1px solid #4a4c80;
     align-items: center;    
     display: flex;
@@ -65,8 +64,10 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 45px;
+    height: 45px;
     font-size: 30px;
-    padding: 5px;
+    /* padding: 5px; */
 }
 
 .activity-icon-button {
@@ -75,12 +76,20 @@ h1 {
     border: none;
     /* flex-direction: column;
     gap: 10px; */
+    width: 45px;
+    height: 45px;
     font-size: 30px;
-    padding: 5px;
+    padding: 2px;
+    cursor: pointer;
 }
 
 .activity-icon:hover {
     background: #384766;
+}
+.activity-icon-button:focus {
+    /* background: #384766; */
+    padding-left: 1px;
+    border-left: solid 1px #00aaff;
 }
 
 .sidebar-left {
@@ -98,13 +107,15 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 5px 5px 5px 5px;
+    /* padding: 5px 5px 5px 5px; */
     font-size: 20px;
     color: whitesmoke;
+    cursor: pointer;
 }
 
 .sidebar-left-element:hover {
     background: #384766;
+    cursor: pointer;
 }
 
 .sidebar-left-button {
@@ -112,11 +123,17 @@ h1 {
     border: none;
     font-size: 20px;
     align-items: start;
-    padding-left: 5px;
+    padding: 5px 5px 5px 5px;
+    /* padding-left: 5px; */
     text-align: left;
+    cursor: pointer;
 }
 
 .sidebar-left-button:hover {
+    background: #384766;
+}
+
+.sidebar-left-button:focus {
     background: #384766;
 }
 
