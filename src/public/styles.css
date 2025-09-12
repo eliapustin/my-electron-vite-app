@@ -89,7 +89,8 @@ h1 {
 .activity-icon-button:focus {
     /* background: #384766; */
     padding-left: 1px;
-    border-left: solid 1px #00aaff;
+    border-radius: 100px;
+    border: solid 1px #00aaff;
 }
 
 .sidebar-left {
