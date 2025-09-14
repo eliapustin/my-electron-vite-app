@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu } from 'electron';
+import { app, BrowserWindow, Menu, nativeTheme } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import {UDPServer} from './udp-server/udp-server'
@@ -36,7 +36,7 @@ function createMainWindow() {
   }
 
   // Открываем окно разработчика (если требуется).
-  if (isDev) mainWindow.webContents.openDevTools();
+  // if (isDev) mainWindow.webContents.openDevTools();
 
   // Инициализируем UDP сервер после загрузки окна.
   mainWindow.webContents.on('did-finish-load', () => {
@@ -63,6 +63,9 @@ function createAboutWindow() {
 // процесс инициализации и будет готов к созданию окна браузера.
 // Некоторые API могут быть недоступны до этого момента.
 app.whenReady().then(() => {
+  // dark mode
+  nativeTheme.themeSource = 'dark';
+
   createMainWindow();
 
   // Создаем меню

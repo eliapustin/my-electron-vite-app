@@ -4,18 +4,21 @@
     padding: 0;
     box-sizing: border-box;    
     font-family: Tilda Sans, Tahoma;
-    /* font-family: Tilda Sans; */
     color: whitesmoke;
 }
 
-body {
-    /* font-family: Arial, sans-serif; */
-    min-height: 50vh;
-    height: auto;
+.container {
     display: flex;
-    flex-direction: column;
-    /* background: radial-gradient(circle at 50% 25%, #5e78ac, #182d3f);    */
+    flex-flow: column nowrap;
 }
+
+.main-content {
+    display: flex;
+    flex-flow: row nowrap;
+    background: gray;
+    order: 3
+}
+
 
 header, footer {
     padding: 1rem;
@@ -26,27 +29,6 @@ footer {
     text-shadow: 1px 1px 2px black;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.1);
-}
-
-header {
-    /* color: #129BF9; */
-    color: white;
-    text-shadow: 1px 1px 1px #0a4872;
-    background-color: rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 10px 16px rgba(0,0,0,0.1);
-    text-align: center;
-    display: grid;
-    grid-template-columns: 100px 1fr 100px;
-    align-items: center;
-    padding: 10px 20px;
-}
-
-header {
-    justify-content: center; /* Центрирует весь контент */
-    text-align: center;
-}
-h1 {
-    flex-grow: 1; /* Занимает оставшееся пространство */
 }
 
 .activity-bar-left {
@@ -67,15 +49,12 @@ h1 {
     width: 45px;
     height: 45px;
     font-size: 30px;
-    /* padding: 5px; */
 }
 
 .activity-icon-button {
     display: flex;
     background: none;
     border: none;
-    /* flex-direction: column;
-    gap: 10px; */
     width: 45px;
     height: 45px;
     font-size: 30px;
@@ -87,7 +66,6 @@ h1 {
     background: #384766;
 }
 .activity-icon-button:focus {
-    /* background: #384766; */
     padding-left: 1px;
     border-radius: 100px;
     border: solid 1px #00aaff;
@@ -108,7 +86,6 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    /* padding: 5px 5px 5px 5px; */
     font-size: 20px;
     color: whitesmoke;
     cursor: pointer;
@@ -125,7 +102,6 @@ h1 {
     font-size: 20px;
     align-items: start;
     padding: 5px 5px 5px 5px;
-    /* padding-left: 5px; */
     text-align: left;
     cursor: pointer;
 }
@@ -137,14 +113,14 @@ h1 {
 .sidebar-left-button:focus {
     background: #384766;
 }
-
+/* 
 .logo {
     grid-column: 1;
 }
 
 .logo img {
     height: auto;
-    max-width: 100px; /* Опционально: контроль размера */
+    max-width: 100px; 
 }
 
 .title {
@@ -157,56 +133,40 @@ h1 {
     grid-column: 3;
 }
 
-.container {
-    display: flex;
-    flex: 1;
-    flex-wrap: wrap;
-}
-
 .left-column, .right-column {
     flex: 0 0 300px;
-    /* background-color: rgba(0, 0, 0, 0.3); */
-    /* box-shadow: 0px 10px 16px rgba(0,0,0,0.1); */
     padding: 1rem;
     color: white;
     border-radius: 5px;
     padding: 10px;
 }
 
-.main-content {
-    flex: 1;
-    padding: 1rem;
-    min-width: 300px;
-    min-width: 0;
-}
-
 footer {
     margin-top: auto;
-}
+} */
 
-#drone-container {
+/* #drone-container {
     width: 100%;
     height: 100%;
     position: relative;
     overflow: hidden;
-    flex: 1; /* Занимает все доступное пространство */
-    min-height: 500px; /* Минимальная высота */
+    flex: 1;
 }
 
 #drone-container canvas {
     display: block;
     width: 100% !important;
     height: 100% !important;
-}
+} */
 
-#mode {
+/* #mode {
     color: white;
     background: rgba(0, 0, 0, 0.7);
     padding: 10px;
     border-radius: 5px;
-}  
+}   */
 
-#connection-status {
+/* #connection-status {
     color: white;
     background: rgba(0, 0, 0, 0.7);
     padding: 10px;
@@ -347,13 +307,11 @@ input:checked + .slider:before {
     box-sizing: border-box;
     color: white;
     background: rgba(0, 0, 0, 0.3);
-    /* background: radial-gradient(circle at 50%, #3e414b, #45505a71, #1b2024); */
     border-radius: 5px;
 }
 
 #learning-image {
     max-width: 100%;
-    max-height: 70vh;
     display: block;
     margin: 20px auto;
     border: 1px solid #ccc;
@@ -373,21 +331,6 @@ input:checked + .slider:before {
     min-width: 268px;
 }
 
-/* .part-button {
-    display: block;
-    margin: 5px 0;
-    padding: 8px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.part-button:hover {
-    background-color: #45a049;
-} */
-
 
 .part-button:hover {
     background-color: #0b7dda;
@@ -400,7 +343,6 @@ input:checked + .slider:before {
 }
 
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
@@ -426,4 +368,4 @@ input:checked + .slider:before {
     .header-spacer {
         width: 80px;
     }
-}
+} */
