@@ -1,0 +1,50 @@
+
+* {
+    margin: 0;
+    /* padding: 0; */
+    /* box-sizing: border-box;     */
+    font-family: Tilda Sans, Tahoma;
+    color: whitesmoke;
+}
+
+.container {
+    display: flex;
+    flex-flow: column;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    flex-flow: row;
+    background: red;
+}
+
+.activity-bar-left {
+    display: flex;
+    flex-flow: column;
+    background: green;
+}
+
+.sidebar-left {
+    display: flex;
+    flex-flow: column;
+    background: blue;
+}
+
+.sidebar-right {
+    display: flex;
+    flex-flow: column;
+    background: gray;
+}
+
+#test {
+    display: flex;
+    flex: 1;
+    flex-flow: column;
+    background: orangered;
+}
+
+footer {
+    background: black;
+}

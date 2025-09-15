@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Учебный тренажер Пчелка</title>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- <header>
+        <div class="logo">
+            <img src="src/public/images/logo_white_ru.png" alt="Логотип" width="100">
+        </div>
+        <h1 class="title">Учебный тренажер Пчелка</h1>
+        <div class="header-spacer"></div>  -->
+        <!-- Пустой элемент для баланса -->
+    <!-- </header> -->
+
+    
+    <div class="container">    
+        
+        <main class="main-content">  
+            <div class="activity-bar-left">
+                <div class="activity-icon" data-id="settings">                
+                    <button class="activity-icon-button">🧭</button>
+                </div>
+                <div class="activity-icon" data-id="mode">                
+                    <button class="activity-icon-button">🔍</button>
+                </div>
+            </div>
+
+            <div class="sidebar-left">
+                <div class="sidebar-left-element">
+                    <button class="sidebar-left-button">Настройки</button>
+                </div>
+                <div class="sidebar-left-element">
+                    <button class="sidebar-left-button">Режим</button>
+                </div>
+                <div class="sidebar-left-element">
+                    <button class="sidebar-left-button">Полет</button>
+                </div>
+            </div>
+
+            <!-- <div class="sidebar-left">
+            </div> -->  
+
+            
+            <div id="drone-container">   
+            </div>
+            
+        
+            <div class="sidebar-right">
+                <!-- <div id="info">
+                    <h3>Положение дрона</h3>
+                    <p>Крен: <span id="roll">0.00</span>°</p>
+                    <p>Тангаж: <span id="pitch">0.00</span>°</p>
+                    <p>Рыскание: <span id="yaw">0.00</span>°</p>
+                </div> -->
+                <!-- <div id="connection-status">
+                    Состояние связи: <span id="status-text">Нет подключения</span>
+                </div>
+            
+                <div id="info">
+                    <h3>MAVLink Data</h3>
+                    <p>Тип: <span id="mavlink-type">N/A</span></p>
+                    <p>Система: <span id="mavlink-sysid">N/A</span></p>
+                    <p>Компонент: <span id="mavlink-compid">N/A</span></p>
+                </div>
+                    
+                <div id="info">
+                    <h3>SYS_STATUS</h3>
+                    <p>Напряжение: <span id="voltage">0.00</span> V</p>
+                    <p>Ток: <span id="current">0.00</span> A</p>
+                    <p>Остаток: <span id="battery-remain">0</span>%</p>
+                    <p>Загрузка: <span id="load">0</span>%</p>
+                </div>
+                
+                <div id="info">
+                    <h3>ATTITUDE</h3>
+                    <p>Крен: <span id="att-roll">0.00</span>°</p>
+                    <p>Тангаж: <span id="att-pitch">0.00</span>°</p>
+                    <p>Рыскание: <span id="att-yaw">0.00</span>°</p>
+                    <p>Скорость крена: <span id="roll-speed">0.00</span> rad/s</p>
+                    <p>Скорость тангажа: <span id="pitch-speed">0.00</span> rad/s</p>
+                    <p>Скорость рыскания: <span id="yaw-speed">0.00</span> rad/s</p>
+                </div>
+                
+                <div id="info">
+                    <h3>RC_CHANNELS</h3>
+                    <p>Канал 1: <span id="rc-chan1">0</span></p>
+                    <p>Канал 2: <span id="rc-chan2">0</span></p>
+                    <p>Канал 3: <span id="rc-chan3">0</span></p>
+                    <p>Канал 4: <span id="rc-chan4">0</span></p>
+                    <p>RSSI: <span id="rc-rssi">0</span>%</p>
+                </div>
+                
+                <div id="info">
+                    <h3>VFR_HUD</h3>
+                    <p>Воздушная скорость: <span id="airspeed">0.00</span> m/s</p>
+                    <p>Наземная скорость: <span id="groundspeed">0.00</span> m/s</p>
+                    <p>Курс: <span id="heading">0</span>°</p>
+                    <p>Газ: <span id="throttle">0</span>%</p>
+                    <p>Высота: <span id="altitude">0.00</span> m</p>
+                    <p>Скорость набора: <span id="climb">0.00</span> m/s</p>
+                </div> -->
+
+                <div id="mode">
+                    <div class="toggle-switch">
+                        <label style="min-width: 80px;">Режим:</label>
+                        <label class="switch">
+                            <input type="checkbox" id="mode-toggle">
+                            <span class="slider"></span>
+                        </label>
+                        <span id="mode-text">Авто</span>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="toggle-switch">
+                            <label style="min-width: 80px;">Обучение:</label>
+                            <label class="switch">
+                                <input type="checkbox" id="split-model-toggle">
+                                <span class="slider"></span>
+                            </label>
+                            <span id="split-model-text">Выкл</span>
+                        </div>
+                    </div>
+
+                    <div id="learning-content-button" style="display: none; align-items: center;">
+                        <button id="back-to-3d" style="                    
+                        display: block;       
+                        margin: 0 auto;       
+                        padding: 8px 15px;    
+                        background-color: #4CAF50;
+                        color: white;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        min-width: 268px;"
+                        >Назад к 3D модели</button>
+                    </div>
+                    
+                    <div id="drone-parts">
+                    </div>
+            
+                    <div class="control-group">
+                        <h3>Ориентация дрона</h3>
+                        <div class="slider-container">
+                            <label>Крен:</label>
+                            <input type="range" id="roll-control" min="-180" max="180" step="1" value="0">
+                            <span id="roll-value">0°</span>
+                        </div>
+                        <div class="slider-container">
+                            <label>Тангаж:</label>
+                            <input type="range" id="pitch-control" min="-180" max="180" step="1" value="0">
+                            <span id="pitch-value">0°</span>
+                        </div>
+                        <div class="slider-container">
+                            <label>Рыскание:</label>
+                            <input type="range" id="yaw-control" min="-180" max="180" step="1" value="0">
+                            <span id="yaw-value">0°</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <h3>Скорость вращения лопастей</h3>
+                        <div class="slider-container">
+                            <label>Скорость:</label>
+                            <input type="range" id="propeller-speed" min="0" max="100" step="1" value="0">
+                            <span id="propeller-speed-value">0%</span>
+                        </div>
+                    </div>
+                </div>
+            
+                <div id="controls">        
+                    <div class="control-group">
+                        <h3>Положение камеры</h3>
+                        <div class="slider-container">
+                            <label>X:</label>
+                            <input type="range" id="cam-x" min="-20" max="20" step="0.1" value="0">
+                            <span id="cam-x-value">0</span>
+                        </div>
+                        <div class="slider-container">
+                            <label>Y:</label>
+                            <input type="range" id="cam-y" min="-20" max="20" step="0.1" value="1">
+                            <span id="cam-y-value">1</span>
+                        </div>
+                        <div class="slider-container">
+                            <label>Z:</label>
+                            <input type="range" id="cam-z" min="-20" max="20" step="0.1" value="3">
+                            <span id="cam-z-value">3</span>
+                        </div>
+                    </div>
+            
+                    <div class="control-group">
+                        <h3>Вращение камеры</h3>
+                        <div class="slider-container">
+                            <label>X:</label>
+                            <input type="range" id="cam-rot-x" min="-3.14" max="3.14" step="0.01" value="0">
+                            <span id="cam-rot-x-value">0</span>
+                        </div>
+                        <div class="slider-container">
+                            <label>Y:</label>
+                            <input type="range" id="cam-rot-y" min="-3.14" max="3.14" step="0.01" value="0">
+                            <span id="cam-rot-y-value">0</span>
+                        </div>
+                        <div class="slider-container">
+                            <label>Z:</label>
+                            <input type="range" id="cam-rot-z" min="-3.14" max="3.14" step="0.01" value="0">
+                            <span id="cam-rot-z-value">0</span>
+                        </div>
+                    </div>
+            
+                    <div class="control-group">
+                        <h3>Источник света</h3>
+                        <div class="slider-container">
+                            <label>X:</label>
+                            <input type="range" id="light-x" min="-20" max="10" step="0.1" value="1">
+                            <span id="light-x-value">1</span>
+                        </div>
+                        <div class="slider-container">
+                            <label>Y:</label>
+                            <input type="range" id="light-y" min="-20" max="10" step="0.1" value="1">
+                            <span id="light-y-value">1</span>
+                        </div>
+                        <div class="slider-container">
+                            <label>Z:</label>
+                            <input type="range" id="light-z" min="-20" max="10" step="0.1" value="1">
+                            <span id="light-z-value">1</span>
+                        </div>
+                    </div>
+                </div>           
+
+                <div id="controls">    
+                    <div class="control-group">
+                        <h3>Симулятор полета</h3>
+                        <button id="flight-simulator-btn" style="                    
+                            display: block;       
+                            margin: 0 auto;       
+                            padding: 8px 15px;    
+                            background-color: #2196F3;
+                            color: white;
+                            border: none;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            min-width: 268px;">
+                            Запустить симулятор полета
+                        </button>
+                    </div>      
+                    <div class="simulation-controls">
+                        <label style=" 
+                            width: 230px;">
+                            Длительность (сек):
+                            <input type="number" id="animationDuration" min="0.1" max="10" step="0.1" value="1">
+                        </label>
+                        <label style=" 
+                            width: 230px;">
+                            Пауза (сек):
+                            <input type="number" id="animationPause" min="0.1" max="10" step="0.1" value="1">
+                        </label>
+                    </div>
+                </div>
+                
+                <div id="controls">
+                    <div class="control-save-settings">
+                        <h3>Сохранение настроек</h3>
+                        <button id="save-settings">Сохранить</button>
+                        <button id="load-settings">Загрузить</button>
+                    </div>
+                </div>
+            </div>
+                  
+            
+            <div id="learning-content" style="display: none;">
+                <div id="learning-text"></div>
+                <img id="learning-image" src="" alt="Учебное изображение">
+            </div>
+        </main>
+    
+    <!-- <footer>
+        <p>© 2025 ООО АвиаТехноСофт</p>
+    </footer>        -->
+    <script src="/src/renderer.js" type="module"></script>
+</body>
+</html>
