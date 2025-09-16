@@ -75,3 +75,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     simulator.init();
 })
+
+document.querySelectorAll('.activity-button').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Снимаем active со всех кнопок в activity-bar-left
+        const allButtons = this.closest('.activity-bar').querySelectorAll('.activity-button');
+
+        allButtons.forEach(button => {
+            button.classList.remove('active');
+        });
+        
+        // Добавляем active к текущей кнопке
+        this.classList.add('active');        
+    });
+});

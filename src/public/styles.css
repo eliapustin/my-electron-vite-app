@@ -18,7 +18,7 @@ html, body {
     display: grid;
     height: 100vh; 
     grid-template-columns: [col1-activity] 50px [col2-sidebar-left] 300px [col3-main] auto [col4-sidebar-right] 300px [col5-end];
-    grid-template-rows: [row1-header] 25px [row2-main] auto [row3-info] 200px [row4-footer] 25px [row5-end];
+    grid-template-rows: [row1-header] 0px [row2-main] auto [row3-info] 200px [row4-footer] 25px [row5-end];
 }
 
 
@@ -27,15 +27,45 @@ html, body {
     grid-column-end: col4-sidebar-right;
     grid-row-start: row2-main;
     grid-row-end: row3-info;
-    background: red;
+    background: gray;
+    color: black;
 }
 
-.activity-bar-left {
+.activity-bar {
     grid-column-start: col1-activity;
     grid-column-end: col2-sidebar-left;
     grid-row-start: row2-main;
     grid-row-end: row4-footer;
-    background: green;
+    display: flex;
+    flex-flow: column;
+    align-content: center;
+    background: #21223a;
+    border-right: 1px solid #384776;
+    padding: 2px;
+}
+
+.activity-button {
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease; 
+}
+
+.icon {
+    width: 40px;
+    height: 40px;
+    filter: invert(100%) brightness(40%) contrast(100%);
+    transition: filter 0.2s ease;
+}
+
+.activity-button:hover {
+    filter: invert(0%) brightness(150%) contrast(100%);   
+}
+
+.activity-button.active .icon {
+    filter: invert(100%) brightness(100%) contrast(100%); 
 }
 
 .sidebar-left {
@@ -43,7 +73,8 @@ html, body {
     grid-column-end: col3-main;
     grid-row-start: row2-main;
     grid-row-end: row4-footer;
-    background: blue;
+    background: #21223a;
+    border-right: 1px solid #384776;
 }
 
 .sidebar-right {
@@ -51,7 +82,8 @@ html, body {
     grid-column-end: col5-end;
     grid-row-start: row2-main;
     grid-row-end: row4-footer;
-    background: gray;
+    background: #21223a;
+    border-left: 1px solid #384776;
 }
 
 .info {
@@ -59,7 +91,8 @@ html, body {
     grid-column-end: col4-sidebar-right;
     grid-row-start: row3-info;
     grid-row-end: row4-footer;
-    background: blueviolet;
+    background: #21223a;
+    border-top: 1px solid #384776;
 }
 
 header {
@@ -67,8 +100,8 @@ header {
     grid-column-end: col5-end;
     grid-row-start: row1-header;
     grid-row-end: row2-main;
-    background: yellowgreen;
-    color: black;
+    background: #21223a;
+    border-bottom: 1px solid #384776;
 }
 
 footer {
@@ -76,5 +109,6 @@ footer {
     grid-column-end: col5-end;
     grid-row-start: row4-footer;
     grid-row-end: row5-end;
-    background: black;
+    background: #21223a;
+    border-top: 1px solid #384776;
 }
