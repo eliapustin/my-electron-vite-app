@@ -1,8 +1,9 @@
 
 import './public/styles.css';
 import { DroneSimulator } from './drone-simulator/drone-simulator';
+import { getSidebarLeftContent } from './ui/sidebar-left-content';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {    
     const simulator = new DroneSimulator({
         modelPath: '/src/drone-simulator/bee.glb',
         container: document.getElementById('drone-container'),
@@ -72,20 +73,125 @@ document.addEventListener('DOMContentLoaded', () => {
             flightSimulatorBtn: document.getElementById('flight-simulator-btn')
         }
     });
-
-    simulator.init();
+    simulator.init();    
 })
 
-document.querySelectorAll('.activity-button').forEach(btn => {
-    btn.addEventListener('click', function() {
-        // Снимаем active со всех кнопок в activity-bar-left
-        const allButtons = this.closest('.activity-bar').querySelectorAll('.activity-button');
-
-        allButtons.forEach(button => {
-            button.classList.remove('active');
-        });
-        
-        // Добавляем active к текущей кнопке
-        this.classList.add('active');        
-    });
+document.addEventListener('DOMContentLoaded', () => {
+    const activityManager = new ActivityManager();
+    activityManager.init();
 });
+
+class ActivityManager {
+    constructor() {
+        this.currentActivity = 'simulation';
+        this.init();
+        console.log('init activity manager');
+    }
+
+    init() {
+        this.setupEventListeners();
+        this.loadContent('simulation');
+    }
+
+    setupEventListeners() {
+        const activityButtons = document.querySelectorAll('.activity-button');
+
+        activityButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const contentKey = e.currentTarget.dataset.content; //?
+                this.switchActivity(contentKey, e.currentTarget); 
+            })
+        })
+    }
+
+    switchActivity(contentKey, button) {
+        document.querySelectorAll('.activity-button').forEach(btn => {
+            btn.classList.remove('active');
+        })
+
+        button.classList.add('active');
+
+        this.loadContent(contentKey);
+
+        this.currentActivity = contentKey;
+    }
+
+    loadContent(contentKey) {
+        const sidebarLeft = document.getElementById('sidebar-left');
+
+        sidebarLeft.innerHTML = '';
+
+        const content = getSidebarLeftContent(contentKey);
+        sidebarLeft.innerHTML = content;
+
+        this.setupContentSpecificHandlers(contentKey);
+    }
+
+    setupContentSpecificHandlers(contentKey) {
+        switch(contentKey) {
+            case 'simulation':
+                this.setupSimulationHandlers();
+                break;
+            case 'settings':
+                this.setupSettingsHandlers();
+                break;
+            case 'education':
+                this.setupEducationHandlers();
+                break;
+            case 'flying':
+                this.setupFlyingHandlers();
+                break;
+        }
+    }
+
+    setupSimulationHandlers() {
+        const speedSlider = document.getElementById('sim-speed');
+        const speedValue = document.getElementById('speed-value');
+        
+        // if (speedSlider && speedValue) {
+        //     speedSlider.addEventListener('input', (e) => {
+        //         speedValue.textContent = `${e.target.value}x`;
+        //     });
+        // }
+    }
+
+    setupSettingsHandlers() {
+        const saveBtn = document.getElementById('save-settings');
+        // if (saveBtn) {
+        //     saveBtn.addEventListener('click', () => {
+        //         const udpPort = document.getElementById('udp-port').value;
+        //         console.log('Сохранение настроек, порт:', udpPort);
+        //         // Здесь можно добавить логику сохранения настроек
+        //     });
+        // }
+    }
+
+    setupEducationHandlers() {
+        const lessonButtons = document.querySelectorAll('.lesson-btn');
+        // lessonButtons.forEach(btn => {
+        //     btn.addEventListener('click', (e) => {
+        //         const lesson = e.target.dataset.lesson;
+        //         console.log('Выбран урок:', lesson);
+        //         // Логика загрузки урока
+        //     });
+        // });
+    }
+
+    setupFlyingHandlers() {
+        const takeoffBtn = document.getElementById('takeoff');
+        const landBtn = document.getElementById('land');
+        
+        // if (takeoffBtn) {
+        //     takeoffBtn.addEventListener('click', () => {
+        //         console.log('Команда взлета');
+        //     });
+        // }
+        
+        // if (landBtn) {
+        //     landBtn.addEventListener('click', () => {
+        //         console.log('Команда посадки');
+        //     });
+        // }
+    }
+}
+
