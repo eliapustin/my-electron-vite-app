@@ -2,6 +2,7 @@
 import './public/styles.css';
 import { DroneSimulator } from './drone-simulator/drone-simulator';
 import { getSidebarLeftContent } from './ui/sidebar-left-content';
+import { getSidebarRightContent } from './ui/sidebar-right-content';
 
 document.addEventListener('DOMContentLoaded', () => {    
     const simulator = new DroneSimulator({
@@ -118,11 +119,16 @@ class ActivityManager {
 
     loadContent(contentKey) {
         const sidebarLeft = document.getElementById('sidebar-left');
+        const sidebarRight = document.getElementById('sidebar-right');
 
         sidebarLeft.innerHTML = '';
+        sidebarRight.innerHTML = '';
 
-        const content = getSidebarLeftContent(contentKey);
-        sidebarLeft.innerHTML = content;
+        const sidebarLeftContent = getSidebarLeftContent(contentKey);
+        sidebarLeft.innerHTML = sidebarLeftContent;
+        
+        const sidebarRightContent = getSidebarRightContent(contentKey);
+        sidebarRight.innerHTML = sidebarRightContent;
 
         this.setupContentSpecificHandlers(contentKey);
     }
@@ -145,53 +151,28 @@ class ActivityManager {
     }
 
     setupSimulationHandlers() {
-        const speedSlider = document.getElementById('sim-speed');
-        const speedValue = document.getElementById('speed-value');
-        
-        // if (speedSlider && speedValue) {
-        //     speedSlider.addEventListener('input', (e) => {
-        //         speedValue.textContent = `${e.target.value}x`;
-        //     });
-        // }
     }
 
-    setupSettingsHandlers() {
-        const saveBtn = document.getElementById('save-settings');
-        // if (saveBtn) {
-        //     saveBtn.addEventListener('click', () => {
-        //         const udpPort = document.getElementById('udp-port').value;
-        //         console.log('Сохранение настроек, порт:', udpPort);
-        //         // Здесь можно добавить логику сохранения настроек
-        //     });
-        // }
+    setupSettingsHandlers() {        
+        const sidebarLeftSettingsButtons = document.querySelectorAll('.sidebar-left-button');
+
+        sidebarLeftSettingsButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const allSidebarLeftSettingsButtons = this.closest('.sidebar-left').querySelectorAll('.sidebar-left-button');
+
+                allSidebarLeftSettingsButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                })
+
+                this.classList.add('active');
+            })
+        })
     }
 
     setupEducationHandlers() {
-        const lessonButtons = document.querySelectorAll('.lesson-btn');
-        // lessonButtons.forEach(btn => {
-        //     btn.addEventListener('click', (e) => {
-        //         const lesson = e.target.dataset.lesson;
-        //         console.log('Выбран урок:', lesson);
-        //         // Логика загрузки урока
-        //     });
-        // });
     }
 
     setupFlyingHandlers() {
-        const takeoffBtn = document.getElementById('takeoff');
-        const landBtn = document.getElementById('land');
-        
-        // if (takeoffBtn) {
-        //     takeoffBtn.addEventListener('click', () => {
-        //         console.log('Команда взлета');
-        //     });
-        // }
-        
-        // if (landBtn) {
-        //     landBtn.addEventListener('click', () => {
-        //         console.log('Команда посадки');
-        //     });
-        // }
     }
 }
 

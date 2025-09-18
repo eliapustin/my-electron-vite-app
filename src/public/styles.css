@@ -3,8 +3,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;    
-    font-family: Tilda Sans, Tahoma;
+    font-family: Tilda Sans, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: whitesmoke;
+    font-size: medium;
 }
 
 html, body {
@@ -37,7 +38,7 @@ html, body {
     grid-row-start: row2-main;
     grid-row-end: row4-footer;
     display: flex;
-    flex-flow: column;
+    flex-direction: column;
     align-content: center;
     background: #21223a;
     border-right: 1px solid #384776;
@@ -73,6 +74,9 @@ html, body {
     grid-column-end: col3-main;
     grid-row-start: row2-main;
     grid-row-end: row4-footer;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     background: #21223a;
     border-right: 1px solid #384776;
 }
@@ -111,4 +115,45 @@ footer {
     grid-row-end: row5-end;
     background: #21223a;
     border-top: 1px solid #384776;
+}
+
+.sidebar-left-button {
+    background: none;
+    border: none;
+    text-align: start;
+    padding: 2px 5px;
+}
+
+.sidebar-left-button:hover {
+    background: rgb(255, 255, 255, 0.2);
+}
+.sidebar-left-button.active {
+    background: rgb(255, 255, 255, 0.3);
+}
+
+.control-group {
+    margin-bottom: 5px;
+    padding: 5px;
+}
+.control-group h3 {
+    margin-top: 0;
+    margin-bottom: 5px;   
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+}
+.slider-container label {
+    width: 50px;
+    margin-right: 10px;
+    text-align: right;
+}
+.slider-container input {
+    flex-grow: 1;
+}
+.slider-container span {
+    width: 50px;
+    text-align: left;
+    margin-left: 10px;
 }
