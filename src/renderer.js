@@ -155,19 +155,6 @@ class ActivityManager {
     }
 
     setupSettingsHandlers() {        
-        const sidebarLeftSettingsButtons = document.querySelectorAll('.sidebar-left-button');
-
-        sidebarLeftSettingsButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const allSidebarLeftSettingsButtons = this.closest('.sidebar-left').querySelectorAll('.sidebar-left-button');
-
-                allSidebarLeftSettingsButtons.forEach(btn => {
-                    btn.classList.remove('active');
-                })
-
-                this.classList.add('active');
-            })
-        })
     }
 
     setupEducationHandlers() {
