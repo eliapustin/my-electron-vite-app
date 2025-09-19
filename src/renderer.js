@@ -1,5 +1,6 @@
 
-import './public/styles.css';
+import './public/css/styles.css';
+import './public/css/custom.css';
 import { DroneSimulator } from './drone-simulator/drone-simulator';
 import { getSidebarLeftContent } from './ui/sidebar-left-content';
 import { getSidebarRightContent } from './ui/sidebar-right-content';
