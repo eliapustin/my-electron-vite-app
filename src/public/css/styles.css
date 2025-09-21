@@ -31,6 +31,8 @@ html, body {
     background: gray;
     color: black;
     background: radial-gradient(circle at 50% 25%, #384766, #182d3f);   
+    max-width: 1000px;
+    max-height: 1000px;
 }
 
 .activity-bar {
