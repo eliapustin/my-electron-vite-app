@@ -993,7 +993,9 @@ export class DroneSimulator {
         const resizeObserver = new ResizeObserver(() => {
             const container = this.config.container;
             const width = container.clientWidth;
+            console.log(width)
             const height = container.clientHeight;
+            console.log(height)
             
             this.renderer.setSize(width, height);
             this.camera.aspect = width / height;

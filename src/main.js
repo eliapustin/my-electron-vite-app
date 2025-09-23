@@ -20,8 +20,8 @@ function createMainWindow() {
   // Создаем окно браузера
   mainWindow = new BrowserWindow({
     title: "АТС Симулятор",
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 1024,
     icon: 'src/assets/icon/v2_colour_64x64_8bit.ico',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -36,7 +36,7 @@ function createMainWindow() {
   }
 
   // Открываем окно разработчика (если требуется).
-  // if (isDev) mainWindow.webContents.openDevTools();
+  if (isDev) mainWindow.webContents.openDevTools();
 
   // Инициализируем UDP сервер после загрузки окна.
   mainWindow.webContents.on('did-finish-load', () => {
