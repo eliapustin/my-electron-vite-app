@@ -2,8 +2,7 @@
 import './public/css/styles.css';
 import './public/css/custom.css';
 import { DroneSimulator } from './drone-simulator/drone-simulator';
-import { getSidebarLeftContent } from './ui/sidebar-left-content';
-import { getSidebarRightContent } from './ui/sidebar-right-content';
+import { getHeaderContent } from './ui/header-content';
 
 document.addEventListener('DOMContentLoaded', () => {    
     const simulator = new DroneSimulator({
@@ -92,7 +91,8 @@ class ActivityManager {
 
     init() {
         this.setupEventListeners();
-        this.loadContent('simulation');
+        this.setSideBarLeftContent('simulation');
+        this.switchHeaderContent('simulation');
     }
 
     setupEventListeners() {
@@ -102,8 +102,17 @@ class ActivityManager {
             button.addEventListener('click', (e) => {
                 const contentKey = e.currentTarget.dataset.content; //?
                 this.switchActivity(contentKey, e.currentTarget); 
+
+                this.switchHeaderContent(contentKey);
+                this.setSideBarLeftContent(contentKey);
+                this.setupContentSpecificHandlers(contentKey);
             })
         })
+    }
+
+    switchHeaderContent(contentKey) {
+        const header = document.getElementById('header-content');
+        header.innerHTML = getHeaderContent(contentKey);
     }
 
     switchActivity(contentKey, button) {
@@ -112,26 +121,30 @@ class ActivityManager {
         })
 
         button.classList.add('active');
-
-        this.loadContent(contentKey);
-
         this.currentActivity = contentKey;
     }
 
-    loadContent(contentKey) {
-        const sidebarLeft = document.getElementById('sidebar-left');
-        const sidebarRight = document.getElementById('sidebar-right');
+    setSideBarLeftContent(contentKey) {
+        // Скрываем все accordion-body
+        document.querySelectorAll('.accordion.accordion-flush').forEach(accordion => {
+            accordion.classList.add('d-none');
+        });
 
-        sidebarLeft.innerHTML = '';
-        sidebarRight.innerHTML = '';
+        // Показываем только нужный accordion-блок
+        const targetAccordion = document.querySelector(`.accordion.accordion-flush[data-content="${contentKey}"]`);
+        if (targetAccordion) {
+            targetAccordion.classList.remove("d-none");
 
-        const sidebarLeftContent = getSidebarLeftContent(contentKey);
-        sidebarLeft.innerHTML = sidebarLeftContent;
-        
-        const sidebarRightContent = getSidebarRightContent(contentKey);
-        sidebarRight.innerHTML = sidebarRightContent;
+            // Закрываем все секции в показываемом accordion
+            const collapses = targetAccordion.querySelectorAll('.accrodion-collapse');
+            const buttons = targetAccordion.querySelectorAll('.accrodion-button');
 
-        this.setupContentSpecificHandlers(contentKey);
+            collapses.forEach(collapse => collapse.classList.remove('show'));
+            buttons.forEach(button => {
+                button.classList.add('collapsed');
+                button.setAttribute('aria-expanded', 'false');
+            });
+        }
     }
 
     setupContentSpecificHandlers(contentKey) {
