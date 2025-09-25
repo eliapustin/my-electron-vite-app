@@ -36,90 +36,23 @@
             <div class="accordion accordion-flush" id="accordion-settings" data-content="simulation">
                 <div id="controls">    
                     <div class="control-group">
-                        <h3>Симулятор полета</h3>
-                        <button id="flight-simulator-btn" style="                    
-                            display: block;       
-                            margin: 0 auto;       
-                            padding: 8px 15px;    
-                            background-color: #2196F3;
-                            color: white;
-                            border: none;
-                            border-radius: 4px;
-                            cursor: pointer;
-                            min-width: 268px;">
-                            Запустить симулятор полета
-                        </button>
-                    </div>      
-                    <div class="simulation-controls">
-                        <label style=" 
-                            width: 230px;">
-                            Длительность (сек):
-                            <input type="number" id="animationDuration" min="0.1" max="10" step="0.1" value="1">
-                        </label>
-                        <label style=" 
-                            width: 230px;">
-                            Пауза (сек):
-                            <input type="number" id="animationPause" min="0.1" max="10" step="0.1" value="1">
-                        </label>
-                    </div>
-                </div>
-                <!-- <div class="accordion-item">
-                    <h2 class="accordion-header">
-                    <button 
-                    class="accordion-button collapsed" 
-                    type="button" 
-                    data-bs-toggle="collapse" 
-                    data-bs-target="#flush-collapseOne" 
-                    aria-expanded="false" 
-                    aria-controls="flush-collapseOne"
-                    data-content="simulation">
-                        Симуляция кнопка 1
-                    </button>
-                    </h2>
-                    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionSettings">
-                        <div class="accordion-body">
-                            <p>Симуляция содержимое 1</p>
+                        <div class="simulation-controls">
+                            <label>
+                                Длительность (сек):
+                                <input class="input-settings" type="number" id="animationDuration" min="0.1" max="10" step="0.1" value="1">
+                            </label>
+                        </div>
+                        <div class="simulation-controls">
+                            <label>
+                                Пауза (сек):
+                                <input class="input-settings" type="number" id="animationPause" min="0.1" max="10" step="0.1" value="1">
+                            </label>
+                        </div>
+                        <div class="d-grid gap-1">
+                            <button type="button" class="btn btn-primary" id="flight-simulator-btn">Запустить симулятор полета</button>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                    <button 
-                    class="accordion-button collapsed" 
-                    type="button" 
-                    data-bs-toggle="collapse" 
-                    data-bs-target="#flush-collapseTwo" 
-                    aria-expanded="false" 
-                    aria-controls="flush-collapseTwo"
-                    data-content="simulation">
-                        Симуляция кнопка 2
-                    </button>
-                    </h2>
-                    <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionSettings">
-                        <div class="accordion-body">
-                            <p>Симуляция содержимое 2</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                    <button 
-                    class="accordion-button collapsed" 
-                    type="button" 
-                    data-bs-toggle="collapse" 
-                    data-bs-target="#flush-collapseThree" 
-                    aria-expanded="false" 
-                    aria-controls="flush-collapseThree"
-                    data-content="simulation">
-                        Симуляция кнопка 3
-                    </button>
-                    </h2>
-                    <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionSettings">
-                        <div class="accordion-body">
-                            <p>Симуляция содержимое 3</p>
-                        </div>
-                    </div>
-                </div> -->
             </div>
             <div class="accordion accordion-flush" id="accordion-settings" data-content="settings">
                 <div class="accordion-item">
@@ -284,105 +217,73 @@
         </div>
         
         <div class="sidebar-right" id="sidebar-right">
-            <div id="mode">
+            <div class="toggle-switch d-none">
+                <label style="min-width: 80px;">Режим:</label>
+                <label class="switch">
+                    <input type="checkbox" id="mode-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span id="mode-text">Авто</span>
+            </div>
+
+            <div class="control-group d-none">
                 <div class="toggle-switch">
-                    <label style="min-width: 80px;">Режим:</label>
+                    <label style="min-width: 80px;">Обучение:</label>
                     <label class="switch">
-                        <input type="checkbox" id="mode-toggle">
+                        <input type="checkbox" id="split-model-toggle">
                         <span class="slider"></span>
                     </label>
-                    <span id="mode-text">Авто</span>
-                </div>
-
-                <div class="control-group">
-                    <div class="toggle-switch">
-                        <label style="min-width: 80px;">Обучение:</label>
-                        <label class="switch">
-                            <input type="checkbox" id="split-model-toggle">
-                            <span class="slider"></span>
-                        </label>
-                        <span id="split-model-text">Выкл</span>
-                    </div>
-                </div>
-
-                <div id="learning-content-button" style="display: none; align-items: center;">
-                    <button id="back-to-3d" style="                    
-                    display: block;       
-                    margin: 0 auto;       
-                    padding: 8px 15px;    
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    min-width: 268px;"
-                    >Назад к 3D модели</button>
-                </div>
-                
-                <div id="drone-parts">
-                </div>
-        
-                <div class="control-group">
-                    <h3>Ориентация дрона</h3>
-                    <div class="slider-container">
-                        <label>Крен:</label>
-                        <input type="range" id="roll-control" min="-180" max="180" step="1" value="0">
-                        <span id="roll-value">0°</span>
-                    </div>
-                    <div class="slider-container">
-                        <label>Тангаж:</label>
-                        <input type="range" id="pitch-control" min="-180" max="180" step="1" value="0">
-                        <span id="pitch-value">0°</span>
-                    </div>
-                    <div class="slider-container">
-                        <label>Рыскание:</label>
-                        <input type="range" id="yaw-control" min="-180" max="180" step="1" value="0">
-                        <span id="yaw-value">0°</span>
-                    </div>
-                </div>
-                
-                <div class="control-group">
-                    <h3>Скорость вращения лопастей</h3>
-                    <div class="slider-container">
-                        <label>Скорость:</label>
-                        <input type="range" id="propeller-speed" min="0" max="100" step="1" value="0">
-                        <span id="propeller-speed-value">0%</span>
-                    </div>
+                    <span id="split-model-text">Выкл</span>
                 </div>
             </div>
 
-            <!-- <div id="controls">    
-                <div class="control-group">
-                    <h3>Симулятор полета</h3>
-                    <button id="flight-simulator-btn" style="                    
-                        display: block;       
-                        margin: 0 auto;       
-                        padding: 8px 15px;    
-                        background-color: #2196F3;
-                        color: white;
-                        border: none;
-                        border-radius: 4px;
-                        cursor: pointer;
-                        min-width: 268px;">
-                        Запустить симулятор полета
-                    </button>
-                </div>      
-                <div class="simulation-controls">
-                    <label style=" 
-                        width: 230px;">
-                        Длительность (сек):
-                        <input type="number" id="animationDuration" min="0.1" max="10" step="0.1" value="1">
-                    </label>
-                    <label style=" 
-                        width: 230px;">
-                        Пауза (сек):
-                        <input type="number" id="animationPause" min="0.1" max="10" step="0.1" value="1">
-                    </label>
+            <div id="learning-content-button" style="display: none; align-items: center;">
+                <button id="back-to-3d" style="                    
+                display: block;       
+                margin: 0 auto;       
+                padding: 8px 15px;    
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                min-width: 268px;"
+                >Назад к 3D модели</button>
+            </div>
+            
+            <div id="drone-parts">
+            </div>
+
+            <div class="control-group" id="drone-orientation">
+                <p>Ориентация дрона</p>
+                <div class="slider-container" id="roll-slider">
+                    <label>Крен:</label>
+                    <input type="range" id="roll-control" min="-180" max="180" step="1" value="0" disabled>
+                    <span id="roll-value">0°</span>
                 </div>
-            </div> -->
+                <div class="slider-container" id="pitch-slider">
+                    <label>Тангаж:</label>
+                    <input type="range" id="pitch-control" min="-180" max="180" step="1" value="0">
+                    <span id="pitch-value">0°</span>
+                </div>
+                <div class="slider-container" id="yaw-slider">
+                    <label>Рыскание:</label>
+                    <input type="range" id="yaw-control" min="-180" max="180" step="1" value="0">
+                    <span id="yaw-value">0°</span>
+                </div>
+            </div>
+            
+            <div class="control-group d-none">
+                <h3>Скорость вращения лопастей</h3>
+                <div class="slider-container">
+                    <label>Скорость:</label>
+                    <input type="range" id="propeller-speed" min="0" max="100" step="1" value="0">
+                    <span id="propeller-speed-value">0%</span>
+                </div>
+            </div>
             
             <div id="controls">
-                <div class="control-save-settings">
+                <div class="control-save-settings d-none">
                     <h3>Сохранение настроек</h3>
                     <button id="save-settings">Сохранить</button>
                     <button id="load-settings">Загрузить</button>

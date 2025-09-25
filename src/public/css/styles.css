@@ -81,7 +81,23 @@ html, body {
     align-items: stretch;
     background: #21223a;
     border-right: 1px solid #384776;
+    padding: 5px;
 }
+
+.sidebar-left-button {
+    background: none;
+    border: none;
+    text-align: start;
+    padding: 2px 5px;
+}
+
+.sidebar-left-button:hover {
+    background: rgb(255, 255, 255, 0.2);
+}
+.sidebar-left-button.active {
+    background: rgb(255, 255, 255, 0.3);
+}
+
 
 .sidebar-right {
     grid-column-start: col4-sidebar-right;
@@ -93,6 +109,7 @@ html, body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    padding: 5px;
 }
 
 .info {
@@ -130,45 +147,76 @@ footer {
     border-top: 1px solid #384776;
 }
 
-.sidebar-left-button {
-    background: none;
-    border: none;
-    text-align: start;
-    padding: 2px 5px;
-}
-
-.sidebar-left-button:hover {
-    background: rgb(255, 255, 255, 0.2);
-}
-.sidebar-left-button.active {
-    background: rgb(255, 255, 255, 0.3);
-}
-
 .control-group {
     margin-bottom: 5px;
     padding: 5px;
+    align-items: center;
 }
+.control-group p{
+    text-align: center;
+}
+
 .control-group h3 {
     margin-top: 0;
     margin-bottom: 5px;   
 }
 
+.btn.btn-primary {
+    background-color: #2196F3;
+    color: white;
+}
 .slider-container {
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    align-items: stretch;
 }
 .slider-container label {
-    width: 50px;
+    width: 70px;
     margin-right: 10px;
     text-align: right;
 }
+.slider-container#roll-slider label {
+    text-align: left;
+}
+.slider-container#pitch-slider label {
+    text-align: left;
+}
+.slider-container#yaw-slider label {
+    text-align: left;
+}
 .slider-container input {
     flex-grow: 1;
+    width: auto;
 }
+
 .slider-container span {
     width: 50px;
     text-align: left;
     margin-left: 10px;
+}
+.slider-container#roll-slider span {
+    text-align: center;
+}
+.slider-container#pitch-slider span {
+    text-align: center;
+}
+.slider-container#yaw-slider span {
+    text-align: center;
+}
+
+.simulation-controls {
+    display: flex;
+    flex-direction: row;
+}
+.simulation-controls label {
+    min-width: none;
+    margin: 5px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.simulation-controls input {
+    color: black;
 }
 
 #drone-container {
@@ -190,4 +238,14 @@ footer {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+}
+
+.d-grid.gap-1 {
+    margin: 5px;
+}
+.accordion.accordion-flush {
+    margin: 5px;
+}
+.accordion-body {
+    align-items: stretch;
 }

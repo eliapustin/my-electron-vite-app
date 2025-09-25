@@ -92,6 +92,7 @@ class ActivityManager {
     init() {
         this.setupEventListeners();
         this.setSideBarLeftContent('simulation');
+        this.setSideBarRightContent('simulation');
         this.switchHeaderContent('simulation');
     }
 
@@ -105,6 +106,7 @@ class ActivityManager {
 
                 this.switchHeaderContent(contentKey);
                 this.setSideBarLeftContent(contentKey);
+                this.setSideBarRightContent(contentKey);
                 this.setupContentSpecificHandlers(contentKey);
             })
         })
@@ -144,6 +146,15 @@ class ActivityManager {
                 button.classList.add('collapsed');
                 button.setAttribute('aria-expanded', 'false');
             });
+        }
+    }
+
+    setSideBarRightContent(contentKey) {
+        const sideBarRight = document.getElementById('drone-orientation');
+        if (contentKey === 'education') {
+            sideBarRight.classList.add('d-none');
+        } else {
+            sideBarRight.classList.remove('d-none');
         }
     }
 
