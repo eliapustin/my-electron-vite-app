@@ -35,6 +35,7 @@
     "dgram": "^1.0.1",
     "electron-squirrel-startup": "^1.0.1",
     "gsap": "^3.13.0",
+    "sqlite3": "^5.1.7",
     "three": "^0.179.1",
     "ws": "^8.2.3"
   }

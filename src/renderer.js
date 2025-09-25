@@ -3,6 +3,7 @@ import './public/css/styles.css';
 import './public/css/custom.css';
 import { DroneSimulator } from './drone-simulator/drone-simulator';
 import { getHeaderContent } from './ui/header-content';
+import { EducationEditor } from './education-editor/education-editor';
 
 document.addEventListener('DOMContentLoaded', () => {    
     const simulator = new DroneSimulator({
@@ -124,6 +125,15 @@ class ActivityManager {
 
         button.classList.add('active');
         this.currentActivity = contentKey;
+
+        // Переключаем отображение контента
+        if (contentKey === 'education') {
+            document.getElementById('drone-container').style.display = 'none';
+            document.getElementById('education-content').style.display = 'block';
+        } else {
+            document.getElementById('drone-container').style.display = 'block';
+            document.getElementById('education-content').style.display = 'none';
+        }
     }
 
     setSideBarLeftContent(contentKey) {
@@ -182,6 +192,7 @@ class ActivityManager {
     }
 
     setupEducationHandlers() {
+        this.educationEditor = new EducationEditor();
     }
 
     setupFlyingHandlers() {

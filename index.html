@@ -214,6 +214,28 @@
         <div class="main-content" id="main-content">   
             <div id="drone-container">   
             </div>
+            
+            <!-- Модальное окно редактора -->
+            <div id="editor-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h3>Редактор урока</h3>
+                    <input type="text" id="lesson-title-input" placeholder="Название урока">
+                    <textarea id="lesson-content-input" placeholder="Содержание урока"></textarea>
+                    <button id="save-lesson-btn">Сохранить</button>
+                    <button id="cancel-editor-btn">Отмена</button>
+                </div>
+            </div>
+
+            <!-- Контент для обучения -->
+            <div id="education-content" style="display: none;">
+                <h2 id="lesson-title"></h2>
+                <div id="lesson-content"></div>
+            </div>
+
+            <!-- Кнопка добавления урока в sidebar-left -->
+            <button id="add-lesson-btn" class="btn btn-primary">Добавить урок</button>
+            <button id="export-btn" class="btn btn-secondary">Экспорт</button>
+            <button id="import-btn" class="btn btn-secondary">Импорт</button>
         </div>
         
         <div class="sidebar-right" id="sidebar-right">

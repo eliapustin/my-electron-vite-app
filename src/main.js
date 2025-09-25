@@ -1,7 +1,8 @@
-import { app, BrowserWindow, Menu, nativeTheme } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import {UDPServer} from './udp-server/udp-server'
+import {Database} from './database/database';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -15,6 +16,7 @@ const isMac = process.platform === 'darwin' ? true : false
 let udpServer;
 let mainWindow;
 let aboutWindow;
+let db;
 
 function createMainWindow() {
   // Создаем окно браузера
@@ -43,6 +45,9 @@ function createMainWindow() {
     udpServer = new UDPServer(mainWindow);
     udpServer.start();
   })
+
+  // Инициализируем базу данных
+  db = new Database();
 };
 
 function createAboutWindow() {
@@ -150,6 +155,98 @@ if (isMac) {
   menu.unshift({role: 'appMenu'})
 }
 
+// Обработчики событий IPC Для работы с базой данных
+ipcMain.handle('get-all-lessons', async () => {
+  return new Promise((resolve, reject) => {
+    db.getAllLessons((err, lessons) => {
+      if (err) reject(err);
+      else resolve(lessons);
+    });
+  });
+});
+
+ipcMain.handle('get-lessons', async (event, id) => {
+  return new Promise((resolve, reject) => {
+    db.getLesson(id, (err, lesson) => {
+      if (err) reject(err);
+      else resolve(lesson);
+    });
+  });
+});
+
+ipcMain.handle('save-lesson', async (event, title, content) => {
+  return new Promise((resolve, reject) => {
+    db.saveLesson(title, content, (err, id) => {
+      if (err) reject(err);
+      else resolve(id);
+    });
+  });
+});
+
+ipcMain.handle('update-lesson', async (event, id, title, conent) => {
+  return new Promise((resolve, reject) => {
+    db.updateLesson(id, title, content, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+});
+
+ipcMain.handle('delete-lesson', async (event, id) => {
+  return new Promise((resolve, reject) => {
+    db.deleteLesson(id, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+});
+
+ipcMain.handle('save-annotation', async (event, lessonId, selectedText, annotationText) => {
+  return new Promise((resolve, reject) => {
+    db.saveAnnotation(lessonId, selectedText, annotationText, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+});
+
+ipcMain.handle('get-annotations', async (event, lessonId) => {
+  return new Promise((resolve, reject) => {
+    db.getAnnotations(lessonId, (err, annotations) => {
+      if (err) reject(err);
+      else resolve(annotations);
+    });
+  });
+});
+
+ipcMain.handle('export-data', async () => {
+  return new Promise((resolve, reject) => {
+    db.exportData((err, data) => {
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
+});
+
+ipcMain.handle('import-data', async (event, jsonData) => {
+  return new Promise((resolve, reject) => {
+    db.importData(jsonData, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+});
+
+// Обработчик для выбора файла импорта/экспорта
+ipcMain.handle('show-save-dialog', async (event, options) => {
+  const result = await dialog.showSaveDialog(mainWindow, options);
+  return result;
+})
+
+ipcMain.handle('show-open-dialog', async (event, options) => {
+  const result = await dialog.showOpenDialog(mainWindow, options);
+  return result;
+})
 
 // Выход из приложения при закрытии всех окон. Работает на всех ОС кроме macOS.
 // В macOS, даже при закрытии всех окон приложение все равно остается активным,
@@ -160,5 +257,8 @@ app.on('window-all-closed', () => {
   }
   if (udpServer) {
     udpServer.stop();
+  }
+  if (db) {
+    db.close();
   }
 });
