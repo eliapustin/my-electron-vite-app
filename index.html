@@ -134,41 +134,10 @@
                 </div>
             </div>
             <div class="accordion accordion-flush" id="accordion-settings" data-content="education">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseEdOne" aria-expanded="false" aria-controls="flush-collapseEdOne">
-                        Обучение кнопка 1
-                    </button>
-                    </h2>
-                    <div id="flush-collapseEdOne" class="accordion-collapse collapse" data-bs-parent="#accordionSettings">
-                        <div class="accordion-body">
-                            <p>Обучение содержимое 1</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseEdTwo" aria-expanded="false" aria-controls="flush-collapseEdTwo">
-                        Обучение кнопка 2
-                    </button>
-                    </h2>
-                    <div id="flush-collapseEdTwo" class="accordion-collapse collapse" data-bs-parent="#accordionSettings">
-                        <div class="accordion-body">
-                            <p>Обучение содержимое 2</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseEdThree" aria-expanded="false" aria-controls="flush-collapseEdThree">
-                        Обучение кнопка 3
-                    </button>
-                    </h2>
-                    <div id="flush-collapseEdThree" class="accordion-collapse collapse" data-bs-parent="#accordionSettings">
-                        <div class="accordion-body">
-                            <p>Обучение содержимое 3</p>
-                        </div>
-                    </div>
+                <div class="add-lesson-group">
+                    <button id="add-lesson-btn" class="btn btn-primary">Добавить урок</button>
+                    <button id="export-btn" class="btn btn-secondary">Экспорт</button>
+                    <button id="import-btn" class="btn btn-secondary">Импорт</button>
                 </div>
             </div>
             <div class="accordion accordion-flush" id="accordion-settings" data-content="flying">
@@ -214,7 +183,7 @@
         <div class="main-content" id="main-content">   
             <div id="drone-container">   
             </div>
-            
+
             <!-- Модальное окно редактора -->
             <div id="editor-modal" class="modal" style="display: none;">
                 <div class="modal-content">
@@ -231,11 +200,6 @@
                 <h2 id="lesson-title"></h2>
                 <div id="lesson-content"></div>
             </div>
-
-            <!-- Кнопка добавления урока в sidebar-left -->
-            <button id="add-lesson-btn" class="btn btn-primary">Добавить урок</button>
-            <button id="export-btn" class="btn btn-secondary">Экспорт</button>
-            <button id="import-btn" class="btn btn-secondary">Импорт</button>
         </div>
         
         <div class="sidebar-right" id="sidebar-right">

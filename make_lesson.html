@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание урока</title>
+    <!-- <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css"> -->
+</head>
+<body>    
+    <!-- Модальное окно редактора -->
+    <div id="editor-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>Редактор урока</h3>
+            <input type="text" id="lesson-title-input" placeholder="Название урока">
+            <textarea id="lesson-content-input" placeholder="Содержание урока"></textarea>
+            <button id="save-lesson-btn">Сохранить</button>
+            <button id="cancel-editor-btn">Отмена</button>
+        </div>
+    </div>
+
+    <!-- Кнопка добавления урока в sidebar-left -->
+    <button id="add-lesson-btn" class="btn btn-primary">Добавить урок</button>
+    <button id="export-btn" class="btn btn-secondary">Экспорт</button>
+    <button id="import-btn" class="btn btn-secondary">Импорт</button>
+</body>
+</html>

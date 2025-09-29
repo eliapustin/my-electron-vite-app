@@ -219,6 +219,16 @@ footer {
     color: black;
 }
 
+.add-lesson-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 5px;
+}
+.add-lesson-group button{
+    margin-bottom: 5px;
+}
+
 #drone-container {
     width: 100%;
     height: 100%;

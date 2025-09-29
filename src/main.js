@@ -16,6 +16,7 @@ const isMac = process.platform === 'darwin' ? true : false
 let udpServer;
 let mainWindow;
 let aboutWindow;
+let makeLessonWindow;
 let db;
 
 function createMainWindow() {
@@ -63,6 +64,20 @@ function createAboutWindow() {
 
   aboutWindow.loadFile('about.html');
 };
+
+function createMakeLessonWindow() {
+  // Создаем окно браузера
+  makeLessonWindow = new BrowserWindow({
+    title: 'Создать урок',
+    width: 1024,
+    height: 768,
+    icon: 'src/assets/icon/v2_colour_64x64_8bit.ico',
+    resizable: true,
+    autoHideMenuBar: true,
+  });
+
+  makeLessonWindow.loadFile('make_lesson.html');
+}
 
 // Данный метод будет вызван, когда Electron завершит
 // процесс инициализации и будет готов к созданию окна браузера.
@@ -145,6 +160,15 @@ const menu = [
       {
         label: 'О программе',
         click: createAboutWindow
+      }
+    ]
+  },
+  {
+    label: 'Обучение',
+    submenu: [
+      {
+        label: 'Создать урок',
+        click: createMakeLessonWindow
       }
     ]
   }
