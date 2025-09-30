@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 class ActivityManager {
     constructor() {
         this.currentActivity = 'simulation';
-        this.init();
+        // this.init();
         console.log('init activity manager');
     }
 

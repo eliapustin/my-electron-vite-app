@@ -6,6 +6,7 @@ export class EducationEditor {
     }
 
     init() {
+        console.log('init education editor')
         this.setupEventListeners();
         this.loadLessons();
     }
@@ -14,6 +15,11 @@ export class EducationEditor {
         // Кнопка добавления нового урока
         document.getElementById('add-lesson-btn').addEventListener('click', () => {
             this.showEditorModal();
+        });
+
+        // Кнопка сохранения нового урока
+        document.getElementById('save-lesson-btn').addEventListener('click', () => {
+            this.saveLesson();
         });
 
         // Кнопки экспорта/импорта
