@@ -6,9 +6,9 @@ export class EducationEditor {
     }
 
     init() {
-        console.log('init education editor')
         this.setupEventListeners();
         this.loadLessons();
+        console.log('init education editor')
     }
 
     setupEventListeners() {
@@ -17,12 +17,6 @@ export class EducationEditor {
             this.showEditorModal();
         });
 
-        // Кнопка сохранения нового урока
-        document.getElementById('save-lesson-btn').addEventListener('click', () => {
-            this.saveLesson();
-        });
-
-        // Кнопки экспорта/импорта
         document.getElementById('export-btn').addEventListener('click', () => {
             this.exportData();
         });
@@ -31,7 +25,14 @@ export class EducationEditor {
             this.importData();
         });
 
-        // Обработчик выделения текста
+        document.getElementById('save-lesson-btn').addEventListener('click', () => {
+            this.saveLesson();
+        });
+
+        document.getElementById('cancel-editor-btn').addEventListener('click', () => {
+            this.hideEditorModal();
+        });
+
         document.addEventListener('selectionchange', this.handleTextSelection.bind(this));
     }
 
@@ -102,6 +103,31 @@ export class EducationEditor {
         }
     }
 
+    async editLesson(lessonId) {
+        try {
+            const lesson = await window.electronAPI.getLesson(lessonId);
+            this.currentLessonId = lessonId;
+            const modal = document.getElementById('editor-modal');
+
+
+            document.getElementById('lesson-title-input').textContent = lesson.title;
+            document.getElementById('lesson-content-input').textContent = lesson.content;
+
+            modal.style.display = 'block';
+        } catch (error) {
+            console.error('Error edit lesson:', error);
+        }
+    }
+
+    async deleteLesson(lessonId) {
+        try {
+            window.electronAPI.deleteLesson(lessonId);
+
+        } catch (error) {
+            console.error('Error delete lesson:', error);
+        }
+    }
+
     showEditorModal(lesson = null) {
         // Реализация модального окна редактора
         const modal = document.getElementById('editor-modal');
@@ -119,6 +145,11 @@ export class EducationEditor {
         }
 
         modal.style.display = 'block';
+    }
+
+    hideEditorModal() {
+        const modal = document.getElementById('editor-modal');
+        modal.style.display = 'none';
     }
 
     async saveLesson() {

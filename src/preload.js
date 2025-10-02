@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     //education:
     getAllLessons: () => ipcRenderer.invoke('get-all-lessons'),
-    getLesson: (id) => ipcRenderrer.invoke('get-lesson', id),
+    getLesson: (id) => ipcRenderer.invoke('get-lesson', id),
     saveLesson: (title, content) => ipcRenderer.invoke('save-lesson', title, content),
     updateLesson: (id, title, content) => ipcRenderer.invoke('update-lesson', id, title, content),
     deleteLesson: (id) => ipcRenderer.invoke('delete-lesson', id),

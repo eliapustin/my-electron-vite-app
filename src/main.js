@@ -189,7 +189,7 @@ ipcMain.handle('get-all-lessons', async () => {
   });
 });
 
-ipcMain.handle('get-lessons', async (event, id) => {
+ipcMain.handle('get-lesson', async (event, id) => {
   return new Promise((resolve, reject) => {
     db.getLesson(id, (err, lesson) => {
       if (err) reject(err);
@@ -207,7 +207,7 @@ ipcMain.handle('save-lesson', async (event, title, content) => {
   });
 });
 
-ipcMain.handle('update-lesson', async (event, id, title, conent) => {
+ipcMain.handle('update-lesson', async (event, id, title, content) => {
   return new Promise((resolve, reject) => {
     db.updateLesson(id, title, content, (err) => {
       if (err) reject(err);

@@ -80,13 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     const activityManager = new ActivityManager();
-    activityManager.init();
+    const educationEditor = new EducationEditor();
 });
 
 class ActivityManager {
     constructor() {
         this.currentActivity = 'simulation';
-        // this.init();
+        this.init();
         console.log('init activity manager');
     }
 
@@ -129,10 +129,13 @@ class ActivityManager {
         // Переключаем отображение контента
         if (contentKey === 'education') {
             document.getElementById('drone-container').style.display = 'none';
-            document.getElementById('education-content').style.display = 'block';
+            document.getElementById('education-content').style.display = 'block';    
         } else {
             document.getElementById('drone-container').style.display = 'block';
-            document.getElementById('education-content').style.display = 'none';
+            document.getElementById('education-content').style.display = 'none';  
+                  
+            const modal = document.getElementById('editor-modal');
+            modal.style.display = 'none';
         }
     }
 
@@ -192,7 +195,6 @@ class ActivityManager {
     }
 
     setupEducationHandlers() {
-        this.educationEditor = new EducationEditor();
     }
 
     setupFlyingHandlers() {
