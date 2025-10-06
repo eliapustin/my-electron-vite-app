@@ -52,6 +52,7 @@ export class EducationEditor {
         lessons.forEach(lesson => {
             const lessonElement = document.createElement('div');
             lessonElement.className = 'lesson-item';
+            lessonElement.setAttribute('id', `lesson-${lesson.id}`);
             lessonElement.innerHTML = `
                 <h4>${lesson.title}</h4>
                 <div class="lesson-actions">
@@ -122,7 +123,8 @@ export class EducationEditor {
     async deleteLesson(lessonId) {
         try {
             window.electronAPI.deleteLesson(lessonId);
-
+            const lessonElement = document.getElementById(`lesson-${lessonId}`);            
+            lessonElement.innerHTML = null;
         } catch (error) {
             console.error('Error delete lesson:', error);
         }
