@@ -198,11 +198,12 @@ ipcMain.handle('get-lesson', async (event, id) => {
   });
 });
 
-ipcMain.handle('save-lesson', async (event, title, content) => {
+// ИСПРАВЛЕННЫЙ ОБРАБОТЧИК - теперь принимает 3 параметра
+ipcMain.handle('save-lesson', async (event, id, title, content) => {
   return new Promise((resolve, reject) => {
-    db.saveLesson(title, content, (err, id) => {
+    db.saveLesson(id, title, content, (err, lessonId) => {
       if (err) reject(err);
-      else resolve(id);
+      else resolve(lessonId);
     });
   });
 });
@@ -273,7 +274,7 @@ ipcMain.handle('show-open-dialog', async (event, options) => {
 })
 
 // Выход из приложения при закрытии всех окон. Работает на всех ОС кроме macOS.
-// В macOS, даже при закрытии всех окон приложение все равно остается активным,
+// В macOS, даже при закрытии всех окон приложения все равно остается активным,
 // пока пользователь не нажмет Ctrl + Q
 app.on('window-all-closed', () => {
   if (!isMac) {

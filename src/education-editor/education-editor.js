@@ -2,19 +2,20 @@ export class EducationEditor {
     constructor() {
         this.currentLessonId = null;
         this.annotations = [];
+        this.courses = [];
         this.init();
     }
 
     init() {
         this.setupEventListeners();
-        this.loadLessons();
+        this.loadCourses();
         console.log('init education editor')
     }
 
     setupEventListeners() {
-        // Кнопка добавления нового урока
+        // Кнопка добавления нового курса
         document.getElementById('add-lesson-btn').addEventListener('click', () => {
-            this.showEditorModal();
+            this.showCourseModal();
         });
 
         document.getElementById('export-btn').addEventListener('click', () => {
@@ -26,62 +27,234 @@ export class EducationEditor {
         });
 
         document.getElementById('save-lesson-btn').addEventListener('click', () => {
-            this.saveLesson();
+            this.saveCourse();
         });
 
         document.getElementById('cancel-editor-btn').addEventListener('click', () => {
             this.hideEditorModal();
         });
 
-        document.addEventListener('selectionchange', this.handleTextSelection.bind(this));
+        // document.addEventListener('selectionchange', this.handleTextSelection.bind(this));
     }
 
-    async loadLessons() {
+    setupLessonEventListeners() {
+        // Добавляем обработчики для кнопок уроков после рендеринга
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.view-lesson')) {
+                const lessonId = e.target.closest('.view-lesson').dataset.id;
+                this.viewLesson(lessonId);
+            } else if (e.target.closest('.edit-lesson')) {
+                const lessonId = e.target.closest('.edit-lesson').dataset.id;
+                this.editLesson(lessonId);
+            } else if (e.target.closest('.delete-lesson')) {
+                const lessonId = e.target.closest('.delete-lesson').dataset.id;
+                this.deleteLesson(lessonId);
+            }
+        });
+    }
+
+    async loadCourses() {
         try {
             const lessons = await window.electronAPI.getAllLessons();
-            this.renderLessonsList(lessons);
+            this.organizeLessonsByStructure(lessons);
+            this.renderCoursesList();
+            this.setupLessonEventListeners();
         } catch (error) {
             console.error('Error loading lessons:', error);
         }
     }
 
-    renderLessonsList(lessons) {
+    organizeLessonsByStructure(lessons) {
+        this.courses = [];
+        
+        lessons.forEach(lesson => {
+            // Проверяем, что ID соответствует формату A.B.C.D
+            const idParts = lesson.id.split('.');
+            if (idParts.length !== 4) {
+                console.warn(`Invalid lesson ID format: ${lesson.id}`);
+                return;
+            }
+            
+            const [chapter, topic, subtopic, lessonNum] = idParts.map(Number);
+            
+            // Находим или создаем курс
+            let course = this.courses.find(c => c.name === `Курс ${chapter}`);
+            if (!course) {
+                course = { name: `Курс ${chapter}`, chapters: [] };
+                this.courses.push(course);
+            }
+            
+            // Находим или создаем главу
+            let chapterObj = course.chapters.find(ch => ch.number === chapter);
+            if (!chapterObj) {
+                chapterObj = { number: chapter, name: `Глава ${chapter}`, topics: [] };
+                course.chapters.push(chapterObj);
+            }
+            
+            // Находим или создаем тему
+            let topicObj = chapterObj.topics.find(t => t.number === topic);
+            if (!topicObj) {
+                topicObj = { number: topic, name: `Тема ${topic}`, subtopics: [] };
+                chapterObj.topics.push(topicObj);
+            }
+            
+            // Находим или создаем подтему
+            let subtopicObj = topicObj.subtopics.find(st => st.number === subtopic);
+            if (!subtopicObj) {
+                subtopicObj = { number: subtopic, name: `Под-тема ${subtopic}`, lessons: [] };
+                topicObj.subtopics.push(subtopicObj);
+            }
+            
+            // Добавляем урок
+            subtopicObj.lessons.push({
+                id: lesson.id,
+                number: lessonNum,
+                title: lesson.title,
+                content: lesson.content
+            });
+        });
+        
+        // Сортируем структуру
+        this.courses.forEach(course => {
+            course.chapters.sort((a, b) => a.number - b.number);
+            course.chapters.forEach(chapter => {
+                chapter.topics.sort((a, b) => a.number - b.number);
+                chapter.topics.forEach(topic => {
+                    topic.subtopics.sort((a, b) => a.number - b.number);
+                    topic.subtopics.forEach(subtopic => {
+                        subtopic.lessons.sort((a, b) => a.number - b.number);
+                    });
+                });
+            });
+        });
+    }
+
+    renderCoursesList() {
         const lessonsContainer = document.getElementById('lessons-list');
         lessonsContainer.innerHTML = '';
 
-        lessons.forEach(lesson => {
-            const lessonElement = document.createElement('div');
-            lessonElement.className = 'lesson-item';
-            lessonElement.setAttribute('id', `lesson-${lesson.id}`);
-            lessonElement.innerHTML = `
-                <h4>${lesson.title}</h4>
-                <div class="lesson-actions">
-                    <button class="btn btn-sm btn-primary view-lesson" data-id="${lesson.id}">Просмотр</button>
-                    <button class="btn btn-sm btn-secondary edit-lesson" data-id="${lesson.id}">Редактировать</button>
-                    <button class="btn btn-sm btn-danger delete-lesson" data-id="${lesson.id}">Удалить</button>
+        // if (this.courses.length === 0) {
+        //     lessonsContainer.innerHTML = '<p class="text-muted">Нет созданных уроков</p>';
+        //     return;
+        // }
+
+        this.courses.forEach(course => {
+            const courseElement = this.createCourseElement(course);
+            lessonsContainer.appendChild(courseElement);
+        });
+    }
+
+    createCourseElement(course) {
+        const courseDiv = document.createElement('div');
+        courseDiv.className = 'course-item mb-3';
+        
+        courseDiv.innerHTML = `
+            <div class="course-header">
+                <h5 class="course-title mb-0">${course.name}</h5>
+            </div>
+            <div class="course-content">
+                ${course.chapters.map(chapter => this.createChapterElement(chapter)).join('')}
+            </div>
+        `;
+
+        return courseDiv;
+    }
+
+    createChapterElement(chapter) {
+        return `
+            <div class="accordion mb-2" id="chapter-${chapter.number}">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#collapseChapter${chapter.number}"
+                                aria-expanded="false" 
+                                aria-controls="collapseChapter${chapter.number}">
+                            ${chapter.name}
+                        </button>
+                    </h2>
+                    <div id="collapseChapter${chapter.number}" 
+                         class="accordion-collapse collapse" 
+                         data-bs-parent="#chapter-${chapter.number}">
+                        <div class="accordion-body p-2">
+                            ${chapter.topics.map(topic => this.createTopicElement(topic, chapter.number)).join('')}
+                        </div>
+                    </div>
                 </div>
-            `;
-            lessonsContainer.appendChild(lessonElement);
-        });
+            </div>
+        `;
+    }
 
-        // Добавляем обработчики событий
-        lessonsContainer.querySelectorAll('.view-lesson').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.viewLesson(parseInt(e.target.dataset.id));
-            });
-        });
+    createTopicElement(topic, chapterNumber) {
+        return `
+            <div class="accordion mb-2" id="topic-${chapterNumber}-${topic.number}">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#collapseTopic${chapterNumber}-${topic.number}"
+                                aria-expanded="false" 
+                                aria-controls="collapseTopic${chapterNumber}-${topic.number}">
+                            ${topic.name}
+                        </button>
+                    </h2>
+                    <div id="collapseTopic${chapterNumber}-${topic.number}" 
+                         class="accordion-collapse collapse" 
+                         data-bs-parent="#topic-${chapterNumber}-${topic.number}">
+                        <div class="accordion-body p-2">
+                            ${topic.subtopics.map(subtopic => this.createSubtopicElement(subtopic, chapterNumber, topic.number)).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
 
-        lessonsContainer.querySelectorAll('.edit-lesson').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.editLesson(parseInt(e.target.dataset.id));
-            });
-        });
+    createSubtopicElement(subtopic, chapterNumber, topicNumber) {
+        return `
+            <div class="accordion mb-2" id="subtopic-${chapterNumber}-${topicNumber}-${subtopic.number}">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#collapseSubtopic${chapterNumber}-${topicNumber}-${subtopic.number}"
+                                aria-expanded="false" 
+                                aria-controls="collapseSubtopic${chapterNumber}-${topicNumber}-${subtopic.number}">
+                            ${subtopic.name}
+                        </button>
+                    </h2>
+                    <div id="collapseSubtopic${chapterNumber}-${topicNumber}-${subtopic.number}" 
+                         class="accordion-collapse collapse" 
+                         data-bs-parent="#subtopic-${chapterNumber}-${topicNumber}-${subtopic.number}">
+                        <div class="accordion-body p-2">
+                            ${subtopic.lessons.map(lesson => this.createLessonElement(lesson)).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
 
-        lessonsContainer.querySelectorAll('.delete-lesson').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.deleteLesson(parseInt(e.target.dataset.id));
-            });
-        });
+    createLessonElement(lesson) {
+        return `
+            <div class="lesson-item d-flex justify-content-between align-items-center p-2 border-bottom" id="lesson-${lesson.id}">
+                <div class="lesson-info flex-grow-1">
+                    <small class="text-muted">Урок ${lesson.number}:</small><br>
+                    <span class="lesson-title">${lesson.title}</span>
+                </div>
+                <div class="lesson-actions ms-2">
+                    <button class="btn btn-sm btn-outline-primary view-lesson" data-id="${lesson.id}" title="Просмотр">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary edit-lesson" data-id="${lesson.id}" title="Редактировать">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger delete-lesson" data-id="${lesson.id}" title="Удалить">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
     }
 
     async viewLesson(lessonId) {
@@ -108,30 +281,67 @@ export class EducationEditor {
         try {
             const lesson = await window.electronAPI.getLesson(lessonId);
             this.currentLessonId = lessonId;
-            const modal = document.getElementById('editor-modal');
-
-
-            document.getElementById('lesson-title-input').textContent = lesson.title;
-            document.getElementById('lesson-content-input').textContent = lesson.content;
-
-            modal.style.display = 'block';
+            this.showLessonModal(lesson);
         } catch (error) {
             console.error('Error edit lesson:', error);
         }
     }
 
     async deleteLesson(lessonId) {
-        try {
-            window.electronAPI.deleteLesson(lessonId);
-            const lessonElement = document.getElementById(`lesson-${lessonId}`);            
-            lessonElement.innerHTML = null;
-        } catch (error) {
-            console.error('Error delete lesson:', error);
+        if (confirm('Вы уверены, что хотите удалить этот урок?')) {
+            try {
+                await window.electronAPI.deleteLesson(lessonId);
+                this.loadCourses();
+            } catch (error) {
+                console.error('Error delete lesson:', error);
+            }
         }
     }
 
-    showEditorModal(lesson = null) {
-        // Реализация модального окна редактора
+    showCourseModal() {
+        const modal = document.getElementById('editor-modal');
+        const titleInput = document.getElementById('lesson-title-input');
+        const contentTextarea = document.getElementById('lesson-content-input');
+        
+        titleInput.value = '';
+        contentTextarea.value = '';
+        this.currentLessonId = null;
+        
+        // Добавляем поля для структуры
+        const existingStructureFields = modal.querySelector('.structure-fields');
+        if (existingStructureFields) {
+            existingStructureFields.remove();
+        }
+        
+        const structureFields = document.createElement('div');
+        structureFields.className = 'structure-fields mb-3';
+        structureFields.innerHTML = `
+            <div class="row g-2">
+                <div class="col-3">
+                    <label class="form-label small">Глава:</label>
+                    <input type="number" id="chapter-number" class="form-control form-control-sm" min="1" value="1">
+                </div>
+                <div class="col-3">
+                    <label class="form-label small">Тема:</label>
+                    <input type="number" id="topic-number" class="form-control form-control-sm" min="1" value="1">
+                </div>
+                <div class="col-3">
+                    <label class="form-label small">Под-тема:</label>
+                    <input type="number" id="subtopic-number" class="form-control form-control-sm" min="1" value="1">
+                </div>
+                <div class="col-3">
+                    <label class="form-label small">Урок:</label>
+                    <input type="number" id="lesson-number" class="form-control form-control-sm" min="1" value="1">
+                </div>
+            </div>
+        `;
+        
+        const titleLabel = modal.querySelector('h3');
+        titleLabel.parentNode.insertBefore(structureFields, titleLabel.nextSibling);
+        modal.style.display = 'block';
+    }
+
+    showLessonModal(lesson = null) {
         const modal = document.getElementById('editor-modal');
         const titleInput = document.getElementById('lesson-title-input');
         const contentTextarea = document.getElementById('lesson-content-input');
@@ -140,10 +350,40 @@ export class EducationEditor {
             titleInput.value = lesson.title;
             contentTextarea.value = lesson.content;
             this.currentLessonId = lesson.id;
-        } else {
-            titleInput.value = '';
-            contentTextarea.value = '';
-            this.currentLessonId = null;
+            
+            // Разбираем ID для заполнения полей структуры
+            const [chapter, topic, subtopic, lessonNum] = lesson.id.split('.').map(Number);
+            
+            const existingStructureFields = modal.querySelector('.structure-fields');
+            if (existingStructureFields) {
+                existingStructureFields.remove();
+            }
+            
+            const structureFields = document.createElement('div');
+            structureFields.className = 'structure-fields mb-3';
+            structureFields.innerHTML = `
+                <div class="row g-2">
+                    <div class="col-3">
+                        <label class="form-label small">Глава:</label>
+                        <input type="number" id="chapter-number" class="form-control form-control-sm" min="1" value="${chapter}" readonly>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label small">Тема:</label>
+                        <input type="number" id="topic-number" class="form-control form-control-sm" min="1" value="${topic}" readonly>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label small">Под-тема:</label>
+                        <input type="number" id="subtopic-number" class="form-control form-control-sm" min="1" value="${subtopic}" readonly>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label small">Урок:</label>
+                        <input type="number" id="lesson-number" class="form-control form-control-sm" min="1" value="${lessonNum}" readonly>
+                    </div>
+                </div>
+            `;
+            
+            const titleLabel = modal.querySelector('h3');
+            titleLabel.parentNode.insertBefore(structureFields, titleLabel.nextSibling);
         }
 
         modal.style.display = 'block';
@@ -154,21 +394,34 @@ export class EducationEditor {
         modal.style.display = 'none';
     }
 
-    async saveLesson() {
+    async saveCourse() {
         const title = document.getElementById('lesson-title-input').value;
         const content = document.getElementById('lesson-content-input').value;
+        
+        const chapter = document.getElementById('chapter-number').value;
+        const topic = document.getElementById('topic-number').value;
+        const subtopic = document.getElementById('subtopic-number').value;
+        const lessonNum = document.getElementById('lesson-number').value;
+        
+        const lessonId = `${chapter}.${topic}.${subtopic}.${lessonNum}`;
+
+        if (!title.trim()) {
+            alert('Пожалуйста, введите название урока');
+            return;
+        }
 
         try {
             if (this.currentLessonId) {
                 await window.electronAPI.updateLesson(this.currentLessonId, title, content);
             } else {
-                await window.electronAPI.saveLesson(title, content);
+                await window.electronAPI.saveLesson(lessonId, title, content);
             }
             
             this.hideEditorModal();
-            this.loadLessons();
+            this.loadCourses();
         } catch (error) {
             console.error('Error saving lesson:', error);
+            alert('Ошибка при сохранении урока: ' + error.message);
         }
     }
 
@@ -249,7 +502,7 @@ export class EducationEditor {
                 const fs = require('fs');
                 const data = fs.readFileSync(result.filePaths[0], 'utf8');
                 await window.electronAPI.importData(data);
-                this.loadLessons();
+                this.loadCourses();
                 alert('Данные успешно импортированы!');
             }
         } catch (error) {

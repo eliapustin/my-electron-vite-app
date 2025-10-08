@@ -81,6 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     const activityManager = new ActivityManager();
     const educationEditor = new EducationEditor();
+
+    // Добавляем обработчики событий после рендеринга
+    setTimeout(() => {
+        educationEditor.setupLessonEventListeners();
+    }, 100);
 });
 
 class ActivityManager {

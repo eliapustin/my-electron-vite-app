@@ -284,3 +284,28 @@ footer {
 .accordion-body {
     align-items: stretch;
 }
+
+.lesson-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.lesson-actions .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.course-header {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.lesson-item {
+    transition: background-color 0.2s;
+}
+
+.lesson-item:hover {
+    background-color: #f8f9fa;
+}

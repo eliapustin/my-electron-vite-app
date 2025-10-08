@@ -28,7 +28,7 @@ export class Database {
     createTables() {
         const lessonsTable = `
             CREATE TABLE IF NOT EXISTS lessons (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id TEXT PRIMARY KEY,
                 title TEXT NOT NULL,
                 content TEXT,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -39,7 +39,7 @@ export class Database {
         const annotationsTable = `
             CREATE TABLE IF NOT EXISTS annotations (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                lesson_id INTEGER,
+                lesson_id TEXT,
                 selected_text TEXT,
                 annotation_text TEXT,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -60,10 +60,10 @@ export class Database {
         this.db.get("SELECT * FROM lessons WHERE id = ?", [id], callback);
     }
 
-    saveLesson(title, content, callback) {
+    saveLesson(id, title, content, callback) {
         this.db.run(
-            "INSERT INTO lessons (title, content) VALUES (?, ?)",
-            [title, content],
+            "INSERT INTO lessons (id, title, content) VALUES (?, ?, ?)",
+            [id, title, content],
             function(err) {
                 callback(err, this.lastID);
             }
