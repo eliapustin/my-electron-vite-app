@@ -162,10 +162,10 @@ export class EducationEditor {
 
     createChapterElement(chapter) {
         return `
-            <div class="accordion mb-2" id="chapter-${chapter.number}">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" 
+            <div class="accordion" id="chapter-${chapter.number}">
+                <div class="accordion-item chapter">
+                    <h2 class="accordion-header chapter">
+                        <button class="accordion-button collapsed chapter" type="button" 
                                 data-bs-toggle="collapse" 
                                 data-bs-target="#collapseChapter${chapter.number}"
                                 aria-expanded="false" 
@@ -176,9 +176,9 @@ export class EducationEditor {
                     <div id="collapseChapter${chapter.number}" 
                          class="accordion-collapse collapse" 
                          data-bs-parent="#chapter-${chapter.number}">
-                        <div class="accordion-body p-2">
+
                             ${chapter.topics.map(topic => this.createTopicElement(topic, chapter.number)).join('')}
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -187,10 +187,10 @@ export class EducationEditor {
 
     createTopicElement(topic, chapterNumber) {
         return `
-            <div class="accordion mb-2" id="topic-${chapterNumber}-${topic.number}">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" 
+            <div class="accordion" id="topic-${chapterNumber}-${topic.number}">
+                <div class="accordion-item topic">
+                    <h2 class="accordion-header topic">
+                        <button class="accordion-button collapsed topic" type="button" 
                                 data-bs-toggle="collapse" 
                                 data-bs-target="#collapseTopic${chapterNumber}-${topic.number}"
                                 aria-expanded="false" 
@@ -201,9 +201,9 @@ export class EducationEditor {
                     <div id="collapseTopic${chapterNumber}-${topic.number}" 
                          class="accordion-collapse collapse" 
                          data-bs-parent="#topic-${chapterNumber}-${topic.number}">
-                        <div class="accordion-body p-2">
+
                             ${topic.subtopics.map(subtopic => this.createSubtopicElement(subtopic, chapterNumber, topic.number)).join('')}
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -212,10 +212,10 @@ export class EducationEditor {
 
     createSubtopicElement(subtopic, chapterNumber, topicNumber) {
         return `
-            <div class="accordion mb-2" id="subtopic-${chapterNumber}-${topicNumber}-${subtopic.number}">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" 
+            <div class="accordion" id="subtopic-${chapterNumber}-${topicNumber}-${subtopic.number}">
+                <div class="accordion-item subtopic">
+                    <h2 class="accordion-header subtopic">
+                        <button class="accordion-button collapsed subtopic" type="button" 
                                 data-bs-toggle="collapse" 
                                 data-bs-target="#collapseSubtopic${chapterNumber}-${topicNumber}-${subtopic.number}"
                                 aria-expanded="false" 
@@ -226,9 +226,9 @@ export class EducationEditor {
                     <div id="collapseSubtopic${chapterNumber}-${topicNumber}-${subtopic.number}" 
                          class="accordion-collapse collapse" 
                          data-bs-parent="#subtopic-${chapterNumber}-${topicNumber}-${subtopic.number}">
-                        <div class="accordion-body p-2">
+
                             ${subtopic.lessons.map(lesson => this.createLessonElement(lesson)).join('')}
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -237,15 +237,12 @@ export class EducationEditor {
 
     createLessonElement(lesson) {
         return `
-            <div class="lesson-item d-flex justify-content-between align-items-center p-2 border-bottom" id="lesson-${lesson.id}">
-                <div class="lesson-info flex-grow-1">
-                    <small class="text-muted">Урок ${lesson.number}:</small><br>
-                    <span class="lesson-title">${lesson.title}</span>
+            <div class="lesson-item d-flex justify-content-between align-items-center" id="lesson-${lesson.id}">
+                <div class="lesson-info flex-grow-1 view-lesson" data-id="${lesson.id}">
+                    
+                    <span class="lesson-title" >${lesson.title}</span>
                 </div>
                 <div class="lesson-actions ms-2">
-                    <button class="btn btn-sm btn-outline-primary view-lesson" data-id="${lesson.id}" title="Просмотр">
-                        <i class="bi bi-eye"></i>
-                    </button>
                     <button class="btn btn-sm btn-outline-secondary edit-lesson" data-id="${lesson.id}" title="Редактировать">
                         <i class="bi bi-pencil"></i>
                     </button>

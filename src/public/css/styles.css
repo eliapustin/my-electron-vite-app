@@ -284,6 +284,29 @@ footer {
 .accordion-body {
     align-items: stretch;
 }
+.accordion-body.p-2 {
+    padding: 0rem;
+}
+.accordion-item.chapter {
+    border: none;
+}
+.accordion-item.topic {
+    border: none;
+}
+.accordion-item.subtopic {
+    border: none;
+}
+
+
+button.accordion-button {
+    margin-bottom: 0px;
+}
+button.accordion-button.topic {
+    padding-left: 15px;
+}
+button.accordion-button.subtopic {
+    padding-left: 25px;
+}
 
 .lesson-actions {
     display: flex;
@@ -300,12 +323,35 @@ footer {
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 10px;
+    padding: 0%;
 }
 
 .lesson-item {
     transition: background-color 0.2s;
+    border: none;
+    cursor: pointer;
+}
+.lesson-info {    
+    margin-left: 25px;
+    margin-right: 25px;
+}
+.lesson-actions {    
+    margin-right: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .lesson-item:hover {
-    background-color: #f8f9fa;
+    background: rgb(255, 255, 255, 0.2);
+}
+
+.add-lesson-group button {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.course-header {
+    background: none;
+    text-align: center;
 }
