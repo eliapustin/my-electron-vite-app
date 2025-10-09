@@ -68,14 +68,14 @@ export class EducationEditor {
         this.courses = [];
         
         lessons.forEach(lesson => {
-            // Проверяем, что ID соответствует формату A.B.C.D
+            // Проверяем, что ID соответствует формату A.B.C (Глава.Тема.Урок)
             const idParts = lesson.id.split('.');
-            if (idParts.length !== 4) {
+            if (idParts.length !== 3) {
                 console.warn(`Invalid lesson ID format: ${lesson.id}`);
                 return;
             }
             
-            const [chapter, topic, subtopic, lessonNum] = idParts.map(Number);
+            const [chapter, topic, lessonNum] = idParts.map(Number);
             
             // Находим или создаем курс
             let course = this.courses.find(c => c.name === `Курс ${chapter}`);
@@ -94,19 +94,17 @@ export class EducationEditor {
             // Находим или создаем тему
             let topicObj = chapterObj.topics.find(t => t.number === topic);
             if (!topicObj) {
-                topicObj = { number: topic, name: `Тема ${topic}`, subtopics: [] };
+                topicObj = { 
+                    number: topic, 
+                    name: `Тема ${topic}`, 
+                    lessons: []
+                };
                 chapterObj.topics.push(topicObj);
-            }
-            
-            // Находим или создаем подтему
-            let subtopicObj = topicObj.subtopics.find(st => st.number === subtopic);
-            if (!subtopicObj) {
-                subtopicObj = { number: subtopic, name: `Под-тема ${subtopic}`, lessons: [] };
-                topicObj.subtopics.push(subtopicObj);
-            }
+            }          
+
             
             // Добавляем урок
-            subtopicObj.lessons.push({
+            topicObj.lessons.push({
                 id: lesson.id,
                 number: lessonNum,
                 title: lesson.title,
@@ -120,10 +118,7 @@ export class EducationEditor {
             course.chapters.forEach(chapter => {
                 chapter.topics.sort((a, b) => a.number - b.number);
                 chapter.topics.forEach(topic => {
-                    topic.subtopics.sort((a, b) => a.number - b.number);
-                    topic.subtopics.forEach(subtopic => {
-                        subtopic.lessons.sort((a, b) => a.number - b.number);
-                    });
+                    topic.lessons.sort((a, b) => a.number - b.number);
                 });
             });
         });
@@ -202,32 +197,7 @@ export class EducationEditor {
                          class="accordion-collapse collapse" 
                          data-bs-parent="#topic-${chapterNumber}-${topic.number}">
 
-                            ${topic.subtopics.map(subtopic => this.createSubtopicElement(subtopic, chapterNumber, topic.number)).join('')}
-
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    createSubtopicElement(subtopic, chapterNumber, topicNumber) {
-        return `
-            <div class="accordion" id="subtopic-${chapterNumber}-${topicNumber}-${subtopic.number}">
-                <div class="accordion-item subtopic">
-                    <h2 class="accordion-header subtopic">
-                        <button class="accordion-button collapsed subtopic" type="button" 
-                                data-bs-toggle="collapse" 
-                                data-bs-target="#collapseSubtopic${chapterNumber}-${topicNumber}-${subtopic.number}"
-                                aria-expanded="false" 
-                                aria-controls="collapseSubtopic${chapterNumber}-${topicNumber}-${subtopic.number}">
-                            ${subtopic.name}
-                        </button>
-                    </h2>
-                    <div id="collapseSubtopic${chapterNumber}-${topicNumber}-${subtopic.number}" 
-                         class="accordion-collapse collapse" 
-                         data-bs-parent="#subtopic-${chapterNumber}-${topicNumber}-${subtopic.number}">
-
-                            ${subtopic.lessons.map(lesson => this.createLessonElement(lesson)).join('')}
+                            ${topic.lessons.map(lesson => this.createLessonElement(lesson)).join('')}
 
                     </div>
                 </div>
@@ -323,10 +293,6 @@ export class EducationEditor {
                     <input type="number" id="topic-number" class="form-control form-control-sm" min="1" value="1">
                 </div>
                 <div class="col-3">
-                    <label class="form-label small">Под-тема:</label>
-                    <input type="number" id="subtopic-number" class="form-control form-control-sm" min="1" value="1">
-                </div>
-                <div class="col-3">
                     <label class="form-label small">Урок:</label>
                     <input type="number" id="lesson-number" class="form-control form-control-sm" min="1" value="1">
                 </div>
@@ -349,7 +315,7 @@ export class EducationEditor {
             this.currentLessonId = lesson.id;
             
             // Разбираем ID для заполнения полей структуры
-            const [chapter, topic, subtopic, lessonNum] = lesson.id.split('.').map(Number);
+            const [chapter, topic, lessonNum] = lesson.id.split('.').map(Number);
             
             const existingStructureFields = modal.querySelector('.structure-fields');
             if (existingStructureFields) {
@@ -367,10 +333,6 @@ export class EducationEditor {
                     <div class="col-3">
                         <label class="form-label small">Тема:</label>
                         <input type="number" id="topic-number" class="form-control form-control-sm" min="1" value="${topic}" readonly>
-                    </div>
-                    <div class="col-3">
-                        <label class="form-label small">Под-тема:</label>
-                        <input type="number" id="subtopic-number" class="form-control form-control-sm" min="1" value="${subtopic}" readonly>
                     </div>
                     <div class="col-3">
                         <label class="form-label small">Урок:</label>
@@ -397,10 +359,9 @@ export class EducationEditor {
         
         const chapter = document.getElementById('chapter-number').value;
         const topic = document.getElementById('topic-number').value;
-        const subtopic = document.getElementById('subtopic-number').value;
         const lessonNum = document.getElementById('lesson-number').value;
         
-        const lessonId = `${chapter}.${topic}.${subtopic}.${lessonNum}`;
+        const lessonId = `${chapter}.${topic}.${lessonNum}`;
 
         if (!title.trim()) {
             alert('Пожалуйста, введите название урока');

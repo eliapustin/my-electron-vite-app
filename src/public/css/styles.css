@@ -293,9 +293,6 @@ footer {
 .accordion-item.topic {
     border: none;
 }
-.accordion-item.subtopic {
-    border: none;
-}
 
 
 button.accordion-button {
@@ -303,9 +300,6 @@ button.accordion-button {
 }
 button.accordion-button.topic {
     padding-left: 15px;
-}
-button.accordion-button.subtopic {
-    padding-left: 25px;
 }
 
 .lesson-actions {
