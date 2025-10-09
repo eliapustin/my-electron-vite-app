@@ -73,10 +73,27 @@ function createMakeLessonWindow() {
     height: 768,
     icon: 'src/assets/icon/v2_colour_64x64_8bit.ico',
     resizable: true,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      enableRemoteModule: false,
+      nodeIntegration: false
+    },
     autoHideMenuBar: true,
+    parent: mainWindow // Делаем окно модальным
   });
 
   makeLessonWindow.loadFile('make_lesson.html');
+
+  // Передаем ссылку на окно создания уроков в главное окно
+  // mainWindow.makeLessonWindow = makeLessonWindow;
+  
+  makeLessonWindow.on('closed', () => {
+    makeLessonWindow = null;
+    if (mainWindow) {
+      mainWindow.makeLessonWindow = null;
+    }
+  });
 }
 
 // Данный метод будет вызван, когда Electron завершит
@@ -272,6 +289,110 @@ ipcMain.handle('show-open-dialog', async (event, options) => {
   const result = await dialog.showOpenDialog(mainWindow, options);
   return result;
 })
+
+// обработчик для открытия окна создания урока
+ipcMain.handle('open-make-lesson-window', async () => {
+  if (!makeLessonWindow) {
+    createMakeLessonWindow();
+  } else {
+    makeLessonWindow.focus();
+  }
+  return true;
+});
+
+// обработчик для получения структуры курсов
+ipcMain.handle('get-courses-structure', async () => {
+  return new Promise((resolve, reject) => {
+    db.getAllLessons((err, lessons) => {
+      if (err) reject(err);
+      else {
+        // Организуем уроки по структуре
+        const courses = [];
+        lessons.forEach(lesson => {
+          const idParts = lesson.id.split('.');
+          if (idParts.length === 3) {
+            const [chapter, topic, lessonNum] = idParts.map(Number);
+            
+            let course = courses.find(c => c.chapter === chapter);
+            if (!course) {
+              course = { 
+                chapter: chapter, 
+                chapterName: `Глава ${chapter}`, 
+                topics: [] 
+              };
+              courses.push(course);
+            }
+            
+            let topicObj = course.topics.find(t => t.topic === topic);
+            if (!topicObj) {
+              topicObj = { 
+                topic: topic, 
+                topicName: `Тема ${topic}`, 
+                lessons: [] 
+              };
+              course.topics.push(topicObj);
+            }
+            
+            topicObj.lessons.push({
+              id: lesson.id,
+              number: lessonNum,
+              title: lesson.title
+            });
+          }
+        });
+        
+        // Сортируем
+        courses.sort((a, b) => a.chapter - b.chapter);
+        courses.forEach(course => {
+          course.topics.sort((a, b) => a.topic - b.topic);
+          course.topics.forEach(topic => {
+            topic.lessons.sort((a, b) => a.number - b.number);
+          });
+        });
+        
+        resolve(courses);
+      }
+    });
+  });
+});
+
+ipcMain.handle('update-chapter-name', async (event, chapter, newName) => {
+  return new Promise((resolve, reject) => {
+    // Здесь нужно обновить все уроки этой главы
+    // Это сложная операция, требующая обновления всех ID уроков
+    // Для простоты можно хранить названия глав в отдельной таблице
+    resolve();
+  });
+});
+
+ipcMain.handle('update-topic-name', async (event, chapter, topic, newName) => {
+  return new Promise((resolve, reject) => {
+    // Аналогично для тем
+    resolve();
+  });
+});
+
+ipcMain.handle('move-lesson', async (event, oldId, newChapter, newTopic, newLessonNum) => {
+  return new Promise((resolve, reject) => {
+    const newId = `${newChapter}.${newTopic}.${newLessonNum}`;
+    
+    // Получаем данные урока
+    db.getLesson(oldId, (err, lesson) => {
+      if (err) reject(err);
+      
+      // Сохраняем с новым ID
+      db.saveLesson(newId, lesson.title, lesson.content, (err) => {
+        if (err) reject(err);
+        
+        // Удаляем старый урок
+        db.deleteLesson(oldId, (err) => {
+          if (err) reject(err);
+          resolve();
+        });
+      });
+    });
+  });
+});
 
 // Выход из приложения при закрытии всех окон. Работает на всех ОС кроме macOS.
 // В macOS, даже при закрытии всех окон приложения все равно остается активным,

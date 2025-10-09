@@ -16,6 +16,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getAnnotations: (lessonId) => ipcRenderer.invoke('get-annotations', lessonId),
     exportData: () => ipcRenderer.invoke('export-data'),
     importData: (jsonData) => ipcRenderer.invoke('import-data', jsonData),
+
     showSaveDialog: (options) => ipcRenderer.invoke('show-save-dialog', options),
-    showOpenDialog: (options) => ipcRenderer.invoke('show-open-dialog', options)
+    showOpenDialog: (options) => ipcRenderer.invoke('show-open-dialog', options),
+
+    openMakeLessonWindow: () => ipcRenderer.invoke('open-make-lesson-window'),
+    getCoursesStructure: () => ipcRenderer.invoke('get-courses-structure'),
+
+    updateChapterName: (chapter, newName) => ipcRenderer.invoke('update-chapter-name', chapter, newName),
+    updateTopicName: (chapter, topic, newName) => ipcRenderer.invoke('update-topic-name', chapter, topic, newName),
+    moveLesson: (oldId, newChapter, newTopic, newLessonNum) => ipcRenderer.invoke('move-lesson', oldId, newChapter, newTopic, newLessonNum)
 });

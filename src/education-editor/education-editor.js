@@ -14,8 +14,8 @@ export class EducationEditor {
 
     setupEventListeners() {
         // Кнопка добавления нового курса
-        document.getElementById('add-lesson-btn').addEventListener('click', () => {
-            this.showCourseModal();
+        document.getElementById('add-lesson-btn').addEventListener('click', async () => {
+            await window.electronAPI.openMakeLessonWindow();
         });
 
         document.getElementById('export-btn').addEventListener('click', () => {
@@ -24,14 +24,6 @@ export class EducationEditor {
 
         document.getElementById('import-btn').addEventListener('click', () => {
             this.importData();
-        });
-
-        document.getElementById('save-lesson-btn').addEventListener('click', () => {
-            this.saveCourse();
-        });
-
-        document.getElementById('cancel-editor-btn').addEventListener('click', () => {
-            this.hideEditorModal();
         });
 
         // document.addEventListener('selectionchange', this.handleTextSelection.bind(this));
