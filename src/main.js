@@ -303,55 +303,9 @@ ipcMain.handle('open-make-lesson-window', async () => {
 // обработчик для получения структуры курсов
 ipcMain.handle('get-courses-structure', async () => {
   return new Promise((resolve, reject) => {
-    db.getAllLessons((err, lessons) => {
+    db.getCoursesStructure((err, structure) => {
       if (err) reject(err);
-      else {
-        // Организуем уроки по структуре
-        const courses = [];
-        lessons.forEach(lesson => {
-          const idParts = lesson.id.split('.');
-          if (idParts.length === 3) {
-            const [chapter, topic, lessonNum] = idParts.map(Number);
-            
-            let course = courses.find(c => c.chapter === chapter);
-            if (!course) {
-              course = { 
-                chapter: chapter, 
-                chapterName: `Глава ${chapter}`, 
-                topics: [] 
-              };
-              courses.push(course);
-            }
-            
-            let topicObj = course.topics.find(t => t.topic === topic);
-            if (!topicObj) {
-              topicObj = { 
-                topic: topic, 
-                topicName: `Тема ${topic}`, 
-                lessons: [] 
-              };
-              course.topics.push(topicObj);
-            }
-            
-            topicObj.lessons.push({
-              id: lesson.id,
-              number: lessonNum,
-              title: lesson.title
-            });
-          }
-        });
-        
-        // Сортируем
-        courses.sort((a, b) => a.chapter - b.chapter);
-        courses.forEach(course => {
-          course.topics.sort((a, b) => a.topic - b.topic);
-          course.topics.forEach(topic => {
-            topic.lessons.sort((a, b) => a.number - b.number);
-          });
-        });
-        
-        resolve(courses);
-      }
+      else resolve(structure);
     });
   });
 });
@@ -390,6 +344,89 @@ ipcMain.handle('move-lesson', async (event, oldId, newChapter, newTopic, newLess
           resolve();
         });
       });
+    });
+  });
+});
+
+// === ОБРАБОТЧИКИ ДЛЯ ГЛАВ ===
+ipcMain.handle('get-all-chapters', async () => {
+  return new Promise((resolve, reject) => {
+    db.getAllChapters((err, chapters) => {
+      if (err) reject(err);
+      else resolve(chapters);
+    });
+  });
+});
+
+ipcMain.handle('create-chapter', async (event, number, name, description) => {
+  return new Promise((resolve, reject) => {
+    db.createChapter(number, name, description, (err, chapterId) => {
+      if (err) reject(err);
+      else resolve(chapterId);
+    });
+  });
+});
+
+ipcMain.handle('update-chapter', async (event, number, name, description) => {
+  return new Promise((resolve, reject) => {
+    db.updateChapter(number, name, description, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+});
+
+ipcMain.handle('delete-chapter', async (event, number) => {
+  return new Promise((resolve, reject) => {
+    db.deleteChapter(number, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+});
+
+// === ОБРАБОТЧИКИ ДЛЯ ТЕМ ===
+ipcMain.handle('get-topics-by-chapter', async (event, chapterNumber) => {
+  return new Promise((resolve, reject) => {
+    db.getTopicsByChapter(chapterNumber, (err, topics) => {
+      if (err) reject(err);
+      else resolve(topics);
+    });
+  });
+});
+
+ipcMain.handle('get-all-topics', async () => {
+  return new Promise((resolve, reject) => {
+    db.getAllTopics((err, topics) => {
+      if (err) reject(err);
+      else resolve(topics);
+    });
+  });
+});
+
+ipcMain.handle('create-topic', async (event, chapterNumber, number, name, description) => {
+  return new Promise((resolve, reject) => {
+    db.createTopic(chapterNumber, number, name, description, (err, topicId) => {
+      if (err) reject(err);
+      else resolve(topicId);
+    });
+  });
+});
+
+ipcMain.handle('update-topic', async (event, chapterNumber, topicNumber, name, description) => {
+  return new Promise((resolve, reject) => {
+    db.updateTopic(chapterNumber, topicNumber, name, description, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+});
+
+ipcMain.handle('delete-topic', async (event, chapterNumber, number) => {
+  return new Promise((resolve, reject) => {
+    db.deleteTopic(chapterNumber, number, (err) => {
+      if (err) reject(err);
+      else resolve();
     });
   });
 });

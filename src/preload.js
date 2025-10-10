@@ -25,5 +25,18 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     updateChapterName: (chapter, newName) => ipcRenderer.invoke('update-chapter-name', chapter, newName),
     updateTopicName: (chapter, topic, newName) => ipcRenderer.invoke('update-topic-name', chapter, topic, newName),
-    moveLesson: (oldId, newChapter, newTopic, newLessonNum) => ipcRenderer.invoke('move-lesson', oldId, newChapter, newTopic, newLessonNum)
+    moveLesson: (oldId, newChapter, newTopic, newLessonNum) => ipcRenderer.invoke('move-lesson', oldId, newChapter, newTopic, newLessonNum),
+
+    // Новые методы для глав
+    getAllChapters: () => ipcRenderer.invoke('get-all-chapters'),
+    createChapter: (number, name, description) => ipcRenderer.invoke('create-chapter', number, name, description),
+    updateChapter: (number, name, description) => ipcRenderer.invoke('update-chapter', number, name, description),
+    deleteChapter: (number) => ipcRenderer.invoke('delete-chapter', number),
+    
+    // Новые методы для тем
+    getTopicsByChapter: (chapterNumber) => ipcRenderer.invoke('get-topics-by-chapter', chapterNumber),
+    getAllTopics: () => ipcRenderer.invoke('get-all-topics'),
+    createTopic: (chapterNumber, number, name, description) => ipcRenderer.invoke('create-topic', chapterNumber, number, name, description),
+    updateTopic: (chapterNumber, topicNumber, name, description) => ipcRenderer.invoke('update-topic', chapterNumber, topicNumber, name, description),
+    deleteTopic: (chapterNumber, number) => ipcRenderer.invoke('delete-topic', chapterNumber, number),
 });
