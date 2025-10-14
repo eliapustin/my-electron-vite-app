@@ -14,6 +14,7 @@ export class MakeLessonManager {
         this.renderStructureSelector();
     }
 
+    // Загрузка главы
     async loadChapters() {
         try {
             this.chapters = await window.electronAPI.getAllChapters();
@@ -22,6 +23,7 @@ export class MakeLessonManager {
         }
     }
 
+    //Загрузка структуры курса
     async loadCoursesStructure() {
         try {
             this.coursesStructure = await window.electronAPI.getCoursesStructure();
@@ -40,6 +42,7 @@ export class MakeLessonManager {
         });
     }
 
+    // Рендеринг селектора структуры
     renderStructureSelector() {
         const container = document.getElementById('structure-selector');
         if (!container) return;
@@ -78,7 +81,7 @@ export class MakeLessonManager {
                         <select class="form-select" id="topic-select" disabled>
                             <option value="">Сначала выберите главу</option>
                         </select>
-                        <div id="new-topic-fields" style="display: none;" class="mt-2">
+                        <div id="new-topic-fields" style="display: block;" class="mt-2">
                             <input type="number" class="form-control mb-2" id="new-topic-number" placeholder="Номер темы">
                             <input type="text" class="form-control" id="new-topic-name" placeholder="Название темы">
                         </div>
@@ -95,6 +98,7 @@ export class MakeLessonManager {
         this.setupActionButtons();
     }
 
+    // Рендеринг главы
     renderChapter(chapter) {
         return `
             <div class="chapter-item mb-3 p-3 border rounded">
@@ -119,6 +123,7 @@ export class MakeLessonManager {
         `;
     }
 
+    // Рендеринг темы
     renderTopic(chapterNumber, topic) {
         return `
             <div class="topic-item mb-2 p-2 border rounded bg-light">
@@ -147,6 +152,7 @@ export class MakeLessonManager {
         `;
     }
 
+    // Настройка кнопок активности
     setupActionButtons() {
         // Обработчики для кнопок добавления
         document.getElementById('add-chapter-btn').addEventListener('click', () => {
@@ -179,13 +185,14 @@ export class MakeLessonManager {
         });
     }
 
+    // Показать модальное окно "Добавить главу" 
     async showAddChapterModal() {
         // const number = prompt('Введите номер главы:');
-        const number = document.getElementById('new-chapter-number'.value);
+        const number = document.getElementById('new-chapter-number').value;
         if (!number) return;
         
         // const name = prompt('Введите название главы:');        
-        const name = document.getElementById('new-chapter-name'.value);
+        const name = document.getElementById('new-chapter-name').value;
         if (!name) return;
 
         try {
@@ -200,12 +207,13 @@ export class MakeLessonManager {
         }
     }
 
+    // Редактирование главы
     async editChapter(chapterNumber) {
         const chapter = this.chapters.find(c => c.number == chapterNumber);
         if (!chapter) return;
 
         // const newName = prompt('Введите новое название главы:', chapter.name);        
-        const newName = document.getElementById('new-chapter-name'.value);
+        const newName = document.getElementById('new-chapter-name').value;
         if (!newName || newName === chapter.name) return;
 
         try {
@@ -220,6 +228,7 @@ export class MakeLessonManager {
         }
     }
 
+    // Удаление главы 
     async deleteChapter(chapterNumber) {
         if (!confirm('Вы уверены, что хотите удалить эту главу? Все темы и уроки также будут удалены.')) {
             return;
@@ -237,13 +246,15 @@ export class MakeLessonManager {
         }
     }
 
+    // Показать модальное окно "Добавить тему"
     async showAddTopicModal() {
         if (this.chapters.length === 0) {
             alert('Сначала создайте хотя бы одну главу');
             return;
         }
 
-        const chapterNumber = prompt('Введите номер главы для новой темы:');
+        // const chapterNumber = prompt('Введите номер главы для новой темы:');
+        const chapterNumber = document.getElementById('chapter-select').value;
         if (!chapterNumber) return;
 
         const chapter = this.chapters.find(c => c.number == chapterNumber);
@@ -252,10 +263,12 @@ export class MakeLessonManager {
             return;
         }
 
-        const number = prompt('Введите номер темы:');
+        // const number = prompt('Введите номер темы:');
+        const number = document.getElementById('new-topic-number').value;
         if (!number) return;
 
-        const name = prompt('Введите название темы:');
+        // const name = prompt('Введите название темы:');
+        const name = document.getElementById('new-topic-name').value;
         if (!name) return;
 
         try {
@@ -269,13 +282,15 @@ export class MakeLessonManager {
         }
     }
 
+    // Редактировать тему 
     async editTopic(chapterNumber, topicNumber) {
         try {
             const topics = await window.electronAPI.getTopicsByChapter(chapterNumber);
             const topic = topics.find(t => t.number == topicNumber);
             if (!topic) return;
 
-            const newName = prompt('Введите новое название темы:', topic.name);
+            // const newName = prompt('Введите новое название темы:', topic.name);
+            const newName = document.getElementById('new-topic-name').value;
             if (!newName || newName === topic.name) return;
 
             await window.electronAPI.updateTopic(chapterNumber, topicNumber, newName, topic.description);
@@ -288,6 +303,7 @@ export class MakeLessonManager {
         }
     }
 
+    // Удалить тему
     async deleteTopic(chapterNumber, topicNumber) {
         if (!confirm('Вы уверены, что хотите удалить эту тему? Все уроки в теме также будут удалены.')) {
             return;
@@ -304,6 +320,7 @@ export class MakeLessonManager {
         }
     }
 
+    // 
     setupStructureEventListeners() {
         const chapterSelect = document.getElementById('chapter-select');
         const topicSelect = document.getElementById('topic-select');
@@ -320,6 +337,7 @@ export class MakeLessonManager {
         });
     }
 
+    // Редактировать выделенную главу
     async updateTopicSelect(chapterNumber) {
         const topicSelect = document.getElementById('topic-select');
         
@@ -338,6 +356,7 @@ export class MakeLessonManager {
         }
     }
 
+    // Сохранить урок
     async saveLesson() {
         const title = document.getElementById('lesson-title-input').value;
         const content = document.getElementById('lesson-content-input').value;
@@ -399,4 +418,4 @@ export class MakeLessonManager {
 }
 
 // Делаем класс доступным глобально
-// window.MakeLessonManager = MakeLessonManager;
+window.MakeLessonManager = MakeLessonManager;
