@@ -48,48 +48,44 @@ export class MakeLessonManager {
         if (!container) return;
 
         container.innerHTML = `
-            <div class="structure-section mb-4">
-                <h4>Структура курса</h4>
-                <div class="mb-3">
-                    <button class="btn btn-sm btn-outline-primary me-2" id="add-chapter-btn">+ Добавить главу</button>
-                    <button class="btn btn-sm btn-outline-secondary" id="add-topic-btn">+ Добавить тему</button>
+
+            <h4>Редактирование курса</h4>
+
+            <div class="row">
+                <div class="col-4">
+                    <div class="mb-3">
+                        <button class="btn btn-sm btn-outline-primary me-2" id="add-chapter-btn">+ Добавить главу</button>
+                        <button class="btn btn-sm btn-outline-primary me-2" id="add-topic-btn">+ Добавить тему</button>
+                        <button class="btn btn-sm btn-outline-primary me-2" id="add-lesson-btn">+ Добавить урок</button>                        
+                        <button class="btn btn-sm btn-outline-warning edit-chapter" data-chapter="1">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger delete-chapter" data-chapter="1">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-warning edit-topic" 
+                                data-chapter="1" data-topic="1">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger delete-topic" 
+                                data-chapter="1" data-topic="1">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <div>
+                        ${this.coursesStructure.map(course => this.renderChapter(course)).join('')}
+                        ${this.coursesStructure.length === 0 ? '<p class="text-muted">Нет созданных глав</p>' : ''}
+                    </div>
                 </div>
-                <div class="structure-tree">
-                    ${this.coursesStructure.map(course => this.renderChapter(course)).join('')}
-                    ${this.coursesStructure.length === 0 ? '<p class="text-muted">Нет созданных глав</p>' : ''}
-                </div>
-            </div>
-            <div class="lesson-placement mb-4">
-                <h5>Размещение урока</h5>
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label">Глава</label>
-                        <select class="form-select" id="chapter-select">
-                            <option value="">Выберите главу</option>
-                            ${this.chapters.map(chapter => 
-                                `<option value="${chapter.number}">${chapter.number}. ${chapter.name}</option>`
-                            ).join('')}
-                            <option value="new">+ Новая глава</option>
-                        </select>
-                        <div id="new-chapter-fields" style="display: none;" class="mt-2">
-                            <input type="number" class="form-control mb-2" id="new-chapter-number" placeholder="Номер главы">
-                            <input type="text" class="form-control" id="new-chapter-name" placeholder="Название главы">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Тема</label>
-                        <select class="form-select" id="topic-select" disabled>
-                            <option value="">Сначала выберите главу</option>
-                        </select>
-                        <div id="new-topic-fields" style="display: block;" class="mt-2">
-                            <input type="number" class="form-control mb-2" id="new-topic-number" placeholder="Номер темы">
-                            <input type="text" class="form-control" id="new-topic-name" placeholder="Название темы">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Урок</label>
-                        <input type="number" class="form-control" id="lesson-number" placeholder="Номер урока" value="1">
-                    </div>
+                <div class = "col-8">
+                    <label for="new-chapter-name" class="form-label">Глава</label>
+                    <input type="text" class="form-control" id="new-chapter-name" placeholder="Введите название главы">
+                    <label for="new-topic-name" class="form-label">Тема</label>
+                    <input type="text" class="form-control" id="new-topic-name" placeholder="Введите название темы">
+                    <label for="new-lesson-name" class="form-label">Урок</label>
+                    <input type="text" class="form-control" id="new-lesson-name" placeholder="Введите название урока">
+                    <label for="lesson-content-input" class="form-label">Содержание урока</label>
+                    <textarea class="form-control" id="lesson-content-input" rows="12" placeholder="Введите содержание урока"></textarea>
                 </div>
             </div>
         `;
@@ -105,14 +101,6 @@ export class MakeLessonManager {
                 <div class="chapter-header d-flex justify-content-between align-items-center mb-2">
                     <div>
                         <strong class="h5">${chapter.chapter}. ${chapter.chapterName}</strong>
-                    </div>
-                    <div>
-                        <button class="btn btn-sm btn-outline-warning edit-chapter" data-chapter="${chapter.chapter}">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger delete-chapter" data-chapter="${chapter.chapter}">
-                            <i class="bi bi-trash"></i>
-                        </button>
                     </div>
                 </div>
                 <div class="topics-list">
@@ -131,16 +119,6 @@ export class MakeLessonManager {
                     <div>
                         <strong>${topic.topic}. ${topic.topicName}</strong>
                         <span class="badge bg-secondary ms-2">${topic.lessons.length} уроков</span>
-                    </div>
-                    <div>
-                        <button class="btn btn-sm btn-outline-warning edit-topic" 
-                                data-chapter="${chapterNumber}" data-topic="${topic.topic}">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger delete-topic" 
-                                data-chapter="${chapterNumber}" data-topic="${topic.topic}">
-                            <i class="bi bi-trash"></i>
-                        </button>
                     </div>
                 </div>
                 <div class="lessons-list mt-2">
