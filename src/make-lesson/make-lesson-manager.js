@@ -52,23 +52,15 @@ export class MakeLessonManager {
             <h4>Редактирование курса</h4>
 
             <div class="row">
-                <div class="col-4">
+                <div class="col-6">
                     <div class="mb-3">
                         <button class="btn btn-sm btn-outline-primary me-2" id="add-chapter-btn">+ Добавить главу</button>
-                        <button class="btn btn-sm btn-outline-primary me-2" id="add-topic-btn">+ Добавить тему</button>
-                        <button class="btn btn-sm btn-outline-primary me-2" id="add-lesson-btn">+ Добавить урок</button>                        
-                        <button class="btn btn-sm btn-outline-warning edit-chapter" data-chapter="1">
+                        <button class="btn btn-sm btn-outline-primary me-2" id="add-topic-btn" style="display: none;">+ Добавить тему</button>
+                        <button class="btn btn-sm btn-outline-primary me-2" id="add-lesson-btn" style="display: none;">+ Добавить урок</button>                        
+                        <button class="btn btn-sm btn-outline-warning edit-selected" element-number="1" style="display: none;">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-danger delete-chapter" data-chapter="1">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-warning edit-topic" 
-                                data-chapter="1" data-topic="1">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger delete-topic" 
-                                data-chapter="1" data-topic="1">
+                        <button class="btn btn-sm btn-outline-danger delete-selected" element-number="1" style="display: none;">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -77,7 +69,7 @@ export class MakeLessonManager {
                         ${this.coursesStructure.length === 0 ? '<p class="text-muted">Нет созданных глав</p>' : ''}
                     </div>
                 </div>
-                <div class = "col-8">
+                <div class = "col-6">
                     <label for="new-chapter-name" class="form-label">Глава</label>
                     <input type="text" class="form-control" id="new-chapter-name" placeholder="Введите название главы">
                     <label for="new-topic-name" class="form-label">Тема</label>

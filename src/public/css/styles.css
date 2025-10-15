@@ -31,7 +31,8 @@ html, body {
     grid-row-end: row3-info;
     background: gray;
     color: black;
-    background: radial-gradient(circle at 50% 25%, #384766, #182d3f);   
+    /* background: radial-gradient(circle at 50% 25%, #384766, #182d3f);    */
+    background: linear-gradient(to bottom, #40405c 0%,#6f71aa 80%,#8a76ab 100%);
 }
 
 .activity-bar {
