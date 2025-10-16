@@ -302,6 +302,9 @@ button.accordion-button {
 button.accordion-button.topic {
     padding-left: 15px;
 }
+button.accordion-button#accordion-button-chapter {
+    color: black;
+}
 
 .lesson-actions {
     display: flex;

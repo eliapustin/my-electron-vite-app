@@ -1,9 +1,13 @@
 export class MakeLessonManager {
     constructor() {
         this.currentLessonId = null;
+        this.currentTopicId = null;
+        this.currentChapterId = null;
         this.coursesStructure = [];
         this.chapters = [];
         this.topics = [];
+        this.typeOfSelectedElement = "";
+        this.typeOfNewElement = "";
         this.init();
     }
 
@@ -33,8 +37,8 @@ export class MakeLessonManager {
     }
 
     setupEventListeners() {
-        document.getElementById('save-lesson-btn').addEventListener('click', () => {
-            this.saveLesson();
+        document.getElementById('save-course-btn').addEventListener('click', () => {
+            this.saveCourse();
         });
 
         document.getElementById('cancel-editor-btn').addEventListener('click', () => {
@@ -49,14 +53,14 @@ export class MakeLessonManager {
 
         container.innerHTML = `
 
-            <h4>Редактирование курса</h4>
+            <h4 style="color: black;">Редактирование курса</h4>
 
             <div class="row">
                 <div class="col-6">
                     <div class="mb-3">
                         <button class="btn btn-sm btn-outline-primary me-2" id="add-chapter-btn">+ Добавить главу</button>
-                        <button class="btn btn-sm btn-outline-primary me-2" id="add-topic-btn" style="display: none;">+ Добавить тему</button>
-                        <button class="btn btn-sm btn-outline-primary me-2" id="add-lesson-btn" style="display: none;">+ Добавить урок</button>                        
+                        <button class="btn btn-sm btn-outline-primary me-2 d-none" id="add-topic-btn"">+ Добавить тему</button>
+                        <button class="btn btn-sm btn-outline-primary me-2 d-none" id="add-lesson-btn"">+ Добавить урок</button>                        
                         <button class="btn btn-sm btn-outline-warning edit-selected" element-number="1" style="display: none;">
                             <i class="bi bi-pencil"></i>
                         </button>
@@ -70,14 +74,17 @@ export class MakeLessonManager {
                     </div>
                 </div>
                 <div class = "col-6">
-                    <label for="new-chapter-name" class="form-label">Глава</label>
-                    <input type="text" class="form-control" id="new-chapter-name" placeholder="Введите название главы">
-                    <label for="new-topic-name" class="form-label">Тема</label>
-                    <input type="text" class="form-control" id="new-topic-name" placeholder="Введите название темы">
-                    <label for="new-lesson-name" class="form-label">Урок</label>
-                    <input type="text" class="form-control" id="new-lesson-name" placeholder="Введите название урока">
-                    <label for="lesson-content-input" class="form-label">Содержание урока</label>
-                    <textarea class="form-control" id="lesson-content-input" rows="12" placeholder="Введите содержание урока"></textarea>
+                    <label for="new-chapter-name" class="form-label d-none mb-2" id="new-chapter-name-label">Глава</label>
+                    <input type="text" class="form-control d-none mb-2" id="new-chapter-number-input" placeholder="Введите номер главы">
+                    <input type="text" class="form-control d-none mb-2" id="new-chapter-name-input" placeholder="Введите название главы">
+                    <label for="new-topic-name" class="form-label d-none"  id="new-topic-name-label">Тема</label>
+                    <input type="text" class="form-control d-none" id="new-topic-number-input" placeholder="Введите номер темы">
+                    <input type="text" class="form-control d-none" id="new-topic-name-input" placeholder="Введите название темы">
+                    <label for="new-lesson-name" class="form-label d-none"  id="new-lesson-name-label">Урок</label>
+                    <input type="text" class="form-control d-none" id="new-lesson-number-input" placeholder="Введите номер урока">
+                    <input type="text" class="form-control d-none" id="new-lesson-name-input" placeholder="Введите название урока">
+                    <label for="lesson-content-input" class="form-label d-none"  id="new-lesson-content-name-label">Содержание урока</label>
+                    <textarea class="form-control d-none" id="lesson-content-input" rows="12" placeholder="Введите содержание урока"></textarea>
                 </div>
             </div>
         `;
@@ -88,29 +95,52 @@ export class MakeLessonManager {
 
     // Рендеринг главы
     renderChapter(chapter) {
-        return `
-            <div class="chapter-item mb-3 p-3 border rounded">
-                <div class="chapter-header d-flex justify-content-between align-items-center mb-2">
-                    <div>
-                        <strong class="h5">${chapter.chapter}. ${chapter.chapterName}</strong>
+        // return `
+        //     <div class="chapter-item">
+        //         <div class="chapter-header d-flex justify-content-between align-items-center" chapterId="${chapter.chapter}">
+        //             <div>
+        //                 <a class="h5" role="button">${chapter.chapter}. ${chapter.chapterName}</a>
+        //             </div>
+        //         </div>
+        //     </div>
+        // `;
+
+        return `<div class="accordion accordion-flush" id="accordion-chapter-${chapter.chapter}">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button 
+                        id="accordion-button-chapter"
+                        class="accordion-button collapsed" 
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#flush-collapseChapter-${chapter.chapter}" 
+                        aria-expanded="false" 
+                        aria-controls="flush-collapseChapter-${chapter.chapter}"
+                        slyle="color: black;">
+                        ${chapter.chapter}. ${chapter.chapterName}
+                    </button>
+                </h2>
+                <div id="flush-collapseChapter-${chapter.chapter}" class="accordion-collapse collapse" data-bs-parent="#accordion-chapter-${chapter.chapter}">
+                    <div class="accordion-body">
+                        <div class="topics-list">
+                            ${chapter.topics.map(topic => this.renderTopic(chapter.chapter, topic)).join('')}
+                            ${chapter.topics.length === 0 ? '<p class="text-muted small">Нет тем</p>' : ''}
+                        </div>
                     </div>
                 </div>
-                <div class="topics-list">
-                    ${chapter.topics.map(topic => this.renderTopic(chapter.chapter, topic)).join('')}
-                    ${chapter.topics.length === 0 ? '<p class="text-muted small">Нет тем</p>' : ''}
-                </div>
             </div>
+        </div>
         `;
     }
 
     // Рендеринг темы
     renderTopic(chapterNumber, topic) {
         return `
-            <div class="topic-item mb-2 p-2 border rounded bg-light">
-                <div class="topic-header d-flex justify-content-between align-items-center">
+            <div class="topic-item bg-light">
+                <div class="topic-header d-flex justify-content-between align-items-center" role="button" topicId="${topic.topic}">
                     <div>
                         <strong>${topic.topic}. ${topic.topicName}</strong>
-                        <span class="badge bg-secondary ms-2">${topic.lessons.length} уроков</span>
+                        <span class="badge bg-secondary ms-2">Количество уроков: ${topic.lessons.length}</span>
                     </div>
                 </div>
                 <div class="lessons-list mt-2">
@@ -156,25 +186,37 @@ export class MakeLessonManager {
     }
 
     // Показать модальное окно "Добавить главу" 
+    // showAddChapterModal() {
     async showAddChapterModal() {
-        // const number = prompt('Введите номер главы:');
-        const number = document.getElementById('new-chapter-number').value;
-        if (!number) return;
-        
-        // const name = prompt('Введите название главы:');        
-        const name = document.getElementById('new-chapter-name').value;
-        if (!name) return;
 
-        try {
-            await window.electronAPI.createChapter(parseInt(number), name, '');
-            await this.loadChapters();
-            await this.loadCoursesStructure();
-            this.renderStructureSelector();
-            alert('Глава успешно создана!');
-        } catch (error) {
-            console.error('Error creating chapter:', error);
-            alert('Ошибка при создании главы: ' + error.message);
-        }
+        // document.getElementById('new-chapter-name-label').classList.remove("d-none");
+        document.getElementById('new-chapter-name-input').classList.remove("d-none");
+        document.getElementById('new-chapter-number-input').classList.remove("d-none");
+        document.getElementById('save-course-btn').classList.remove("d-none");
+
+        this.typeOfNewElement = 'chapter';
+
+        // const chapterName = document.getElementById('new-chapter-name-input').value;
+        // const chapterNumber = document.getElementById('new-chapter-number-input').value;
+
+        // // const number = prompt('Введите номер главы:');
+        // const number = document.getElementById('new-chapter-number').value;
+        // if (!number) return;
+        
+        // // const name = prompt('Введите название главы:');        
+        // const name = document.getElementById('new-chapter-name').value;
+        // if (!name) return;
+
+        // try {
+        //     await window.electronAPI.createChapter(parseInt(number), name, '');
+        //     await this.loadChapters();
+        //     await this.loadCoursesStructure();
+        //     this.renderStructureSelector();
+        //     alert('Глава успешно создана!');
+        // } catch (error) {
+        //     console.error('Error creating chapter:', error);
+        //     alert('Ошибка при создании главы: ' + error.message);
+        // }
     }
 
     // Редактирование главы
@@ -292,19 +334,30 @@ export class MakeLessonManager {
 
     // 
     setupStructureEventListeners() {
-        const chapterSelect = document.getElementById('chapter-select');
-        const topicSelect = document.getElementById('topic-select');
 
-        chapterSelect.addEventListener('change', () => {
-            if (chapterSelect.value === 'new') {
-                document.getElementById('new-chapter-fields').style.display = 'block';
-                topicSelect.disabled = true;
-                topicSelect.innerHTML = '<option value="">Сначала создайте главу</option>';
-            } else {
-                document.getElementById('new-chapter-fields').style.display = 'none';
-                this.updateTopicSelect(chapterSelect.value);
+        const allAccordionButtons = document.querySelectorAll('.accordion-button');
+
+        allAccordionButtons.forEach(accordionButton => {
+            if (accordionButton.id === "accordion-button-chapter") {
+                accordionButton.addEventListener('click', () => {
+                    document.getElementById('add-topic-btn').classList.remove('d-none');
+                })
             }
         });
+
+        // const chapterSelect = document.getElementById('chapter-select');
+        // const topicSelect = document.getElementById('topic-select');
+
+        // chapterSelect.addEventListener('change', () => {
+        //     if (chapterSelect.value === 'new') {
+        //         document.getElementById('new-chapter-fields').style.display = 'block';
+        //         topicSelect.disabled = true;
+        //         topicSelect.innerHTML = '<option value="">Сначала создайте главу</option>';
+        //     } else {
+        //         document.getElementById('new-chapter-fields').style.display = 'none';
+        //         this.updateTopicSelect(chapterSelect.value);
+        //     }
+        // });
     }
 
     // Редактировать выделенную главу
@@ -327,63 +380,95 @@ export class MakeLessonManager {
     }
 
     // Сохранить урок
-    async saveLesson() {
-        const title = document.getElementById('lesson-title-input').value;
-        const content = document.getElementById('lesson-content-input').value;
-        const lessonNumber = document.getElementById('lesson-number').value;
+    async saveCourse() {
+
+        switch (this.typeOfNewElement) {
+            case 'chapter':
+
+                const chapterNumber = document.getElementById('new-chapter-number-input').value;
+                const chapterName = document.getElementById('new-chapter-name-input').value;
+
+                if (!chapterNumber) {
+                    alert('Введите номер главы');
+                    return;                   
+                }
+
+                if (!chapterName) {
+                    alert('Введите название главы'); 
+                    return;                                      
+                }
+
+                try {
+                    await window.electronAPI.createChapter(parseInt(chapterNumber), chapterName, '');
+                    await this.loadChapters();
+                    await this.loadCoursesStructure();
+                    this.renderStructureSelector();
+                    alert('Глава успешно создана!');
+                } catch (error) {
+                    console.error('Error creating chapter:', error);
+                    alert('Ошибка при создании главы: ' + error.message);
+                }
+                break;
+            default:
+                break;
+        }
+
+    //     const lessonTitle = document.getElementById('lesson-title-input').value;
+    //     const lessonContent = document.getElementById('lesson-content-input').value;
+    //     const lessonNumber = document.getElementById('lesson-number').value;
         
-        const chapterSelect = document.getElementById('chapter-select');
-        const topicSelect = document.getElementById('topic-select');
+    //     const chapterSelect = document.getElementById('chapter-select');
+    //     const topicSelect = document.getElementById('topic-select');
         
-        let chapter, topic;
+    //     let chapter, topic;
 
-        if (chapterSelect.value === 'new') {
-            const newChapterNumber = document.getElementById('new-chapter-number').value;
-            const newChapterName = document.getElementById('new-chapter-name').value;
+    //     if (chapterSelect.value === 'new') {
+    //         const newChapterNumber = document.getElementById('new-chapter-number').value;
+    //         const newChapterName = document.getElementById('new-chapter-name').value;
             
-            if (!newChapterNumber || !newChapterName) {
-                alert('Пожалуйста, заполните поля для новой главы');
-                return;
-            }
+    //         if (!newChapterNumber || !newChapterName) {
+    //             alert('Пожалуйста, заполните поля для новой главы');
+    //             return;
+    //         }
             
-            try {
-                await window.electronAPI.createChapter(parseInt(newChapterNumber), newChapterName, '');
-                chapter = newChapterNumber;
-            } catch (error) {
-                alert('Ошибка при создании главы: ' + error.message);
-                return;
-            }
-        } else {
-            chapter = chapterSelect.value;
-        }
+    //         try {
+    //             await window.electronAPI.createChapter(parseInt(newChapterNumber), newChapterName, '');
+    //             chapter = newChapterNumber;
+    //         } catch (error) {
+    //             alert('Ошибка при создании главы: ' + error.message);
+    //             return;
+    //         }
+    //     } else {
+    //         chapter = chapterSelect.value;
+    //     }
 
-        if (!topicSelect.value) {
-            alert('Пожалуйста, выберите тему');
-            return;
-        } else {
-            topic = topicSelect.value;
-        }
+    //     if (!topicSelect.value) {
+    //         alert('Пожалуйста, выберите тему');
+    //         return;
+    //     } else {
+    //         topic = topicSelect.value;
+    //     }
 
-        if (!chapter || !topic || !lessonNumber) {
-            alert('Пожалуйста, заполните все поля структуры');
-            return;
-        }
+    //     if (!chapter || !topic || !lessonNumber) {
+    //         alert('Пожалуйста, заполните все поля структуры');
+    //         return;
+    //     }
 
-        if (!title.trim()) {
-            alert('Пожалуйста, введите название урока');
-            return;
-        }
+    //     if (!title.trim()) {
+    //         alert('Пожалуйста, введите название урока');
+    //         return;
+    //     }
 
-        const lessonId = `${chapter}.${topic}.${lessonNumber}`;
+    //     const lessonId = `${chapter}.${topic}.${lessonNumber}`;
 
-        try {
-            await window.electronAPI.saveLesson(lessonId, title, content);
-            alert('Урок успешно сохранен!');
-            window.close();
-        } catch (error) {
-            console.error('Error saving lesson:', error);
-            alert('Ошибка при сохранении урока: ' + error.message);
-        }
+    //     try {
+    //         await window.electronAPI.saveLesson(lessonId, title, content);
+    //         alert('Урок успешно сохранен!');
+    //         window.close();
+    //     } catch (error) {
+    //         console.error('Error saving lesson:', error);
+    //         alert('Ошибка при сохранении урока: ' + error.message);
+    //     }
     }
 }
 
