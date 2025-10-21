@@ -279,15 +279,22 @@ footer {
 .d-grid.gap-1 {
     margin: 5px;
 }
+
 .accordion.accordion-flush {
-    margin: 5px;
+    margin-bottom: 5px;
 }
 .accordion-body {
     align-items: stretch;
+    padding: 0%;
 }
 .accordion-body.p-2 {
     padding: 0rem;
 }
+
+.accordion-body.topic-body {
+    padding: 0rem;
+}
+
 .accordion-item.chapter {
     border: none;
 }
@@ -295,14 +302,28 @@ footer {
     border: none;
 }
 
+.lesson-item {
+    color: black;
+    padding-left: 40px;
+    text-align: left;
+}
+
+button.btn.btn-light {
+    border-radius: 0%;
+    border: none;
+    margin-bottom: 5px;
+}
 
 button.accordion-button {
     margin-bottom: 0px;
 }
 button.accordion-button.topic {
-    padding-left: 15px;
+    padding-left: 30px;
 }
 button.accordion-button#accordion-button-chapter {
+    color: black;
+}
+button.accordion-button#accordion-button-topic {
     color: black;
 }
 
