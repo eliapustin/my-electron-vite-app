@@ -78,11 +78,11 @@ export class MakeLessonManager {
                     <input type="text" class="form-control d-none mb-2" id="new-chapter-number-input" placeholder="Введите номер главы">
                     <input type="text" class="form-control d-none mb-2" id="new-chapter-name-input" placeholder="Введите название главы">
                     <label for="new-topic-name" class="form-label d-none"  id="new-topic-name-label">Тема</label>
-                    <input type="text" class="form-control d-none" id="new-topic-number-input" placeholder="Введите номер темы">
-                    <input type="text" class="form-control d-none" id="new-topic-name-input" placeholder="Введите название темы">
+                    <input type="text" class="form-control d-none mb-2" id="new-topic-number-input" placeholder="Введите номер темы">
+                    <input type="text" class="form-control d-none mb-2" id="new-topic-name-input" placeholder="Введите название темы">
                     <label for="new-lesson-name" class="form-label d-none"  id="new-lesson-name-label">Урок</label>
-                    <input type="text" class="form-control d-none" id="new-lesson-number-input" placeholder="Введите номер урока">
-                    <input type="text" class="form-control d-none" id="new-lesson-name-input" placeholder="Введите название урока">
+                    <input type="text" class="form-control d-none mb-2" id="new-lesson-number-input" placeholder="Введите номер урока">
+                    <input type="text" class="form-control d-none mb-2" id="new-lesson-name-input" placeholder="Введите название урока">
                     <label for="lesson-content-input" class="form-label d-none"  id="new-lesson-content-name-label">Содержание урока</label>
                     <textarea class="form-control d-none" id="lesson-content-input" rows="12" placeholder="Введите содержание урока"></textarea>
                 </div>
@@ -192,6 +192,13 @@ export class MakeLessonManager {
         // document.getElementById('new-chapter-name-label').classList.remove("d-none");
         document.getElementById('new-chapter-name-input').classList.remove("d-none");
         document.getElementById('new-chapter-number-input').classList.remove("d-none");
+        
+        document.getElementById('new-topic-name-input').classList.add("d-none");
+        document.getElementById('new-topic-number-input').classList.add("d-none");
+        
+        document.getElementById('new-lesson-name-input').classList.add("d-none");
+        document.getElementById('new-lesson-number-input').classList.add("d-none");
+
         document.getElementById('save-course-btn').classList.remove("d-none");
 
         this.typeOfNewElement = 'chapter';
@@ -260,38 +267,52 @@ export class MakeLessonManager {
 
     // Показать модальное окно "Добавить тему"
     async showAddTopicModal() {
-        if (this.chapters.length === 0) {
-            alert('Сначала создайте хотя бы одну главу');
-            return;
-        }
 
-        // const chapterNumber = prompt('Введите номер главы для новой темы:');
-        const chapterNumber = document.getElementById('chapter-select').value;
-        if (!chapterNumber) return;
+        document.getElementById('new-topic-name-input').classList.remove("d-none");
+        document.getElementById('new-topic-number-input').classList.remove("d-none");
 
-        const chapter = this.chapters.find(c => c.number == chapterNumber);
-        if (!chapter) {
-            alert('Глава с таким номером не существует');
-            return;
-        }
+        document.getElementById('new-chapter-name-input').classList.add("d-none");
+        document.getElementById('new-chapter-number-input').classList.add("d-none");    
+        
+        document.getElementById('new-lesson-name-input').classList.add("d-none");
+        document.getElementById('new-lesson-number-input').classList.add("d-none");
 
-        // const number = prompt('Введите номер темы:');
-        const number = document.getElementById('new-topic-number').value;
-        if (!number) return;
+        document.getElementById('save-course-btn').classList.remove("d-none");
 
-        // const name = prompt('Введите название темы:');
-        const name = document.getElementById('new-topic-name').value;
-        if (!name) return;
+        this.typeOfNewElement = 'topic';
 
-        try {
-            await window.electronAPI.createTopic(parseInt(chapterNumber), parseInt(number), name, '');
-            await this.loadCoursesStructure();
-            this.renderStructureSelector();
-            alert('Тема успешно создана!');
-        } catch (error) {
-            console.error('Error creating topic:', error);
-            alert('Ошибка при создании темы: ' + error.message);
-        }
+        // if (this.chapters.length === 0) {
+        //     alert('Сначала создайте хотя бы одну главу');
+        //     return;
+        // }
+
+        // // const chapterNumber = prompt('Введите номер главы для новой темы:');
+        // const chapterNumber = document.getElementById('chapter-select').value;
+        // if (!chapterNumber) return;
+
+        // const chapter = this.chapters.find(c => c.number == chapterNumber);
+        // if (!chapter) {
+        //     alert('Глава с таким номером не существует');
+        //     return;
+        // }
+
+        // // const number = prompt('Введите номер темы:');
+        // const number = document.getElementById('new-topic-number').value;
+        // if (!number) return;
+
+        // // const name = prompt('Введите название темы:');
+        // const name = document.getElementById('new-topic-name').value;
+        // if (!name) return;
+
+        // try {
+        //     await window.electronAPI.createTopic(parseInt(chapterNumber), parseInt(number), name, '');
+        //     await this.loadCoursesStructure();
+        //     this.renderStructureSelector();
+        //     alert('Тема успешно создана!');
+        // } catch (error) {
+        //     console.error('Error creating topic:', error);
+        //     alert('Ошибка при создании темы: ' + error.message);
+        // }
     }
 
     // Редактировать тему 
@@ -408,6 +429,32 @@ export class MakeLessonManager {
                     console.error('Error creating chapter:', error);
                     alert('Ошибка при создании главы: ' + error.message);
                 }
+                break;
+            case 'topic':
+
+                const topivNumber = document.getElementById('new-topic-number-input').value;
+                const topicName = document.getElementById('new-topic-name-input').value;
+
+                if (!chapterNumber) {
+                    alert('Введите номер темы');
+                    return;                   
+                }
+
+                if (!chapterName) {
+                    alert('Введите название темы'); 
+                    return;                                      
+                }
+
+                try {
+                    await window.electronAPI.createTopic(parseInt(chapterNumber), parseInt(topivNumber), topicName, '');
+                    await this.loadCoursesStructure();
+                    this.renderStructureSelector();
+                    alert('Тема успешно создана!');
+                } catch (error) {
+                    console.error('Error creating topic:', error);
+                    alert('Ошибка при создании темы: ' + error.message);
+                }
+
                 break;
             default:
                 break;
