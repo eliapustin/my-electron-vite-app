@@ -432,12 +432,12 @@ export class EducationEditor {
             });
 
             if (!result.canceled) {
-                const fs = require('fs');
-                fs.writeFileSync(result.filePath, data);
+                await window.electronAPI.saveFile(result.filePath, data);
                 alert('Данные успешно экспортированы!');
             }
         } catch (error) {
             console.error('Error exporting data:', error);
+            alert('Ошибка при экспорте данных: ' + error.message);
         }
     }
 
@@ -449,14 +449,15 @@ export class EducationEditor {
             });
 
             if (!result.canceled) {
-                const fs = require('fs');
-                const data = fs.readFileSync(result.filePaths[0], 'utf8');
+                // const fs = require('fs');
+                const data = await window.electronAPI.readFile(result.filePaths[0]);
                 await window.electronAPI.importData(data);
                 this.loadCourses();
                 alert('Данные успешно импортированы!');
             }
         } catch (error) {
             console.error('Error importing data:', error);
+        alert('Ошибка при импорте данных: ' + error.message);
         }
     }
 }

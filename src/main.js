@@ -431,6 +431,26 @@ ipcMain.handle('delete-topic', async (event, chapterNumber, number) => {
   });
 });
 
+ipcMain.handle('save-file', async (event, filePath, data) => {
+    try {
+        const fs = require('fs');
+        fs.writeFileSync(filePath, data);
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+});
+
+ipcMain.handle('read-file', async (event, filePath) => {
+    try {
+        const fs = require('fs');
+        const data = fs.readFileSync(filePath, 'utf8');
+        return data;
+    } catch (error) {
+        throw new Error(`Error reading file: ${error.message}`);
+    }
+});
+
 // Выход из приложения при закрытии всех окон. Работает на всех ОС кроме macOS.
 // В macOS, даже при закрытии всех окон приложения все равно остается активным,
 // пока пользователь не нажмет Ctrl + Q

@@ -16,6 +16,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getAnnotations: (lessonId) => ipcRenderer.invoke('get-annotations', lessonId),
     exportData: () => ipcRenderer.invoke('export-data'),
     importData: (jsonData) => ipcRenderer.invoke('import-data', jsonData),
+    
+    saveFile: (filePath, data) => ipcRenderer.invoke('save-file', filePath, data),
+    readFile: (filePath) => ipcRenderer.invoke('read-file', filePath),
 
     showSaveDialog: (options) => ipcRenderer.invoke('show-save-dialog', options),
     showOpenDialog: (options) => ipcRenderer.invoke('show-open-dialog', options),

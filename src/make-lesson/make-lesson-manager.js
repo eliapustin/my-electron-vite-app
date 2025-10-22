@@ -200,12 +200,15 @@ export class MakeLessonManager {
 
     // Показать модальное окно "Добавить главу" 
     async showAddChapterModal() {        
+        document.getElementById('new-chapter-name-input').classList.remove("d-none");
+        document.getElementById('new-chapter-number-input').classList.remove("d-none");
         
         document.getElementById('new-topic-name-input').classList.add("d-none");
         document.getElementById('new-topic-number-input').classList.add("d-none");
         
         document.getElementById('new-lesson-name-input').classList.add("d-none");
         document.getElementById('new-lesson-number-input').classList.add("d-none");
+        document.getElementById('lesson-content-input').classList.add("d-none");
 
         document.getElementById('save-course-btn').classList.remove("d-none");
 
@@ -253,12 +256,15 @@ export class MakeLessonManager {
 
     // Показать модальное окно "Добавить тему"
     async showAddTopicModal() {
+        document.getElementById('new-chapter-name-input').classList.add("d-none");
+        document.getElementById('new-chapter-number-input').classList.add("d-none");
 
         document.getElementById('new-topic-name-input').classList.remove("d-none");
-        document.getElementById('new-topic-number-input').classList.remove("d-none");
+        document.getElementById('new-topic-number-input').classList.remove("d-none");        
         
         document.getElementById('new-lesson-name-input').classList.add("d-none");
         document.getElementById('new-lesson-number-input').classList.add("d-none");
+        document.getElementById('lesson-content-input').classList.add("d-none");
 
         document.getElementById('save-course-btn').classList.remove("d-none");
 
@@ -305,14 +311,16 @@ export class MakeLessonManager {
 
     // Показать модальное окно "Добавить урок"
     async showAddLessonModal() {
+        document.getElementById('new-chapter-name-input').classList.add("d-none");
+        document.getElementById('new-chapter-number-input').classList.add("d-none");
+        
+        document.getElementById('new-topic-name-input').classList.add("d-none");
+        document.getElementById('new-topic-number-input').classList.add("d-none");  
         
         document.getElementById('new-lesson-name-input').classList.remove("d-none");
         document.getElementById('new-lesson-number-input').classList.remove("d-none");
         document.getElementById('lesson-content-input').classList.remove("d-none");
-
-        document.getElementById('new-topic-name-input').classList.add("d-none");
-        document.getElementById('new-topic-number-input').classList.add("d-none");  
-
+        
         document.getElementById('save-course-btn').classList.remove("d-none");
 
         this.typeOfNewElement = 'lesson';
@@ -453,7 +461,6 @@ export class MakeLessonManager {
                 try {
                     await window.electronAPI.saveLesson(lessonId, lessonTitle, lessonContent);
                     alert('Урок успешно сохранен!');
-                    window.close();
                 } catch (error) {
                     console.error('Error saving lesson:', error);
                     alert('Ошибка при сохранении урока: ' + error.message);

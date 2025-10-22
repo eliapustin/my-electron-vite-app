@@ -179,7 +179,65 @@ export class Database {
         this.db.run("DELETE FROM lessons WHERE id = ?", [id], callback);
     }
 
-    // ... остальные методы (аннотации, экспорт/импорт) без изменений
+    // Методы для аннотаций
+    getAnnotations(lessonId, callback) {
+        this.db.all("SELECT * FROM annotations WHERE lesson_id = ?", [lessonId], callback);
+    }
+
+    saveAnnotation(lessonId, selectedText, annotationText, callback) {
+        this.db.run(
+            "INSERT INTO annotations (lesson_id, selected_text, annotation_text) VALUES (?, ?, ?)",
+            [lessonId, selectedText, annotationText],
+            callback
+        );
+    }
+
+    // Экспорт/импорт
+    exportData(callback) {
+        this.db.serialize(() => {
+            const data = {};
+            
+            this.db.all("SELECT * FROM lessons", (err, lessons) => {
+                if (err) return callback(err);
+                data.lessons = lessons;
+                
+                this.db.all("SELECT * FROM annotations", (err, annotations) => {
+                    if (err) return callback(err);
+                    data.annotations = annotations;
+                    callback(null, JSON.stringify(data, null, 2));
+                });
+            });
+        });
+    }
+
+    importData(jsonData, callback) {
+        const data = JSON.parse(jsonData);
+        
+        this.db.serialize(() => {
+            this.db.run("BEGIN TRANSACTION");
+            
+            // Очищаем существующие данные
+            this.db.run("DELETE FROM annotations");
+            this.db.run("DELETE FROM lessons");
+            
+            // Вставляем новые данные
+            data.lessons.forEach(lesson => {
+                this.db.run(
+                    "INSERT INTO lessons (id, title, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+                    [lesson.id, lesson.title, lesson.content, lesson.created_at, lesson.updated_at]
+                );
+            });
+            
+            data.annotations.forEach(annotation => {
+                this.db.run(
+                    "INSERT INTO annotations (id, lesson_id, selected_text, annotation_text, created_at) VALUES (?, ?, ?, ?, ?)",
+                    [annotation.id, annotation.lesson_id, annotation.selected_text, annotation.annotation_text, annotation.created_at]
+                );
+            });
+            
+            this.db.run("COMMIT", callback);
+        });
+    }
 
     // === НОВЫЙ МЕТОД ДЛЯ ПОЛУЧЕНИЯ ПОЛНОЙ СТРУКТУРЫ ===
     getCoursesStructure(callback) {
