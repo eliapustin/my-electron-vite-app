@@ -1,13 +1,8 @@
-export class MakeLessonManager {
+import { CourseManager } from "../course-manager/course-manager";
+
+export class MakeLessonManager extends CourseManager {
     constructor() {
-        this.currentLessonId = null;
-        this.currentTopicId = null;
-        this.currentChapterId = null;
-        this.coursesStructure = [];
-        this.chapters = [];
-        this.topics = [];
-        this.typeOfSelectedElement = "";
-        this.typeOfNewElement = "";
+        super();
         this.init();
     }
 
@@ -18,25 +13,9 @@ export class MakeLessonManager {
         this.renderStructureSelector();
     }
 
-    // Загрузка главы
-    async loadChapters() {
-        try {
-            this.chapters = await window.electronAPI.getAllChapters();
-        } catch (error) {
-            console.error('Error loading chapters:', error);
-        }
-    }
+    setupEventListeners() {        
+        super.setupStructureEventListeners();
 
-    //Загрузка структуры курса
-    async loadCoursesStructure() {
-        try {
-            this.coursesStructure = await window.electronAPI.getCoursesStructure();
-        } catch (error) {
-            console.error('Error loading courses structure:', error);
-        }
-    }
-
-    setupEventListeners() {
         document.getElementById('save-course-btn').addEventListener('click', () => {
             this.saveCourse();
         });
@@ -82,12 +61,49 @@ export class MakeLessonManager {
                     <input type="text" class="form-control d-none mb-2" id="new-lesson-number-input" placeholder="Введите номер урока">
                     <input type="text" class="form-control d-none mb-2" id="new-lesson-name-input" placeholder="Введите название урока">
                     <textarea class="form-control d-none" id="lesson-content-input" rows="12" placeholder="Введите содержание урока"></textarea>
+                    ${this.renderInputFields()}
                 </div>
             </div>
         `;
 
-        this.setupStructureEventListeners();
         this.setupActionButtons();
+    }
+
+    renderInputFields() {
+        return `
+            <input type="text" class="form-control d-none mb-2" id="new-chapter-number-input" placeholder="Введите номер главы">
+            <input type="text" class="form-control d-none mb-2" id="new-chapter-name-input" placeholder="Введите название главы">
+            <input type="text" class="form-control d-none mb-2" id="new-topic-number-input" placeholder="Введите номер темы">
+            <input type="text" class="form-control d-none mb-2" id="new-topic-name-input" placeholder="Введите название темы">
+            <input type="text" class="form-control d-none mb-2" id="new-lesson-number-input" placeholder="Введите номер урока">
+            <input type="text" class="form-control d-none mb-2" id="new-lesson-name-input" placeholder="Введите название урока">
+            <textarea class="form-control d-none" id="lesson-content-input" rows="12" placeholder="Введите содержание урока"></textarea>
+        `;
+    }
+
+    onChapterSelect(chapterId) {
+        document.getElementById('add-topic-btn').classList.remove('d-none');
+        document.getElementById('add-lesson-btn').classList.add('d-none');
+    }
+
+    onTopicSelect(chapterId, topicId) {
+        document.getElementById('add-lesson-btn').classList.remove('d-none');
+        document.getElementById('add-topic-btn').classList.add('d-none');
+    }
+
+    // Остальные специфичные для MakeLessonManager методы остаются без изменений
+    setupActionButtons() {
+        document.getElementById('add-chapter-btn').addEventListener('click', () => {
+            this.showAddChapterModal();
+        });
+
+        document.getElementById('add-topic-btn').addEventListener('click', () => {
+            this.showAddTopicModal();
+        });
+
+        document.getElementById('add-lesson-btn').addEventListener('click', () => {
+            this.showAddLessonModal();
+        });
     }
 
     // Рендеринг главы

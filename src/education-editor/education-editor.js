@@ -1,15 +1,13 @@
-export class EducationEditor {
+import { CourseManager } from "../course-manager/course-manager";
+export class EducationEditor extends CourseManager {
     constructor() {
-        this.currentLessonId = null;
-        this.annotations = [];
-        this.courses = [];
+        super();
         this.init();
     }
 
     init() {
         this.setupEventListeners();
         this.loadCourses();
-        console.log('init education editor')
     }
 
     setupEventListeners() {
@@ -26,23 +24,7 @@ export class EducationEditor {
             this.importData();
         });
 
-        // document.addEventListener('selectionchange', this.handleTextSelection.bind(this));
-    }
-
-    setupLessonEventListeners() {
-        // Добавляем обработчики для кнопок уроков после рендеринга
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.view-lesson')) {
-                const lessonId = e.target.closest('.view-lesson').dataset.id;
-                this.viewLesson(lessonId);
-            } else if (e.target.closest('.edit-lesson')) {
-                const lessonId = e.target.closest('.edit-lesson').dataset.id;
-                this.editLesson(lessonId);
-            } else if (e.target.closest('.delete-lesson')) {
-                const lessonId = e.target.closest('.delete-lesson').dataset.id;
-                this.deleteLesson(lessonId);
-            }
-        });
+        this.setupLessonEventListeners();
     }
 
     async loadCourses() {
@@ -50,71 +32,70 @@ export class EducationEditor {
             const lessons = await window.electronAPI.getAllLessons();
             this.organizeLessonsByStructure(lessons);
             this.renderCoursesList();
-            this.setupLessonEventListeners();
         } catch (error) {
             console.error('Error loading lessons:', error);
         }
     }
 
-    organizeLessonsByStructure(lessons) {
-        this.courses = [];
+    // organizeLessonsByStructure(lessons) {
+    //     this.courses = [];
         
-        lessons.forEach(lesson => {
-            // Проверяем, что ID соответствует формату A.B.C (Глава.Тема.Урок)
-            const idParts = lesson.id.split('.');
-            if (idParts.length !== 3) {
-                console.warn(`Invalid lesson ID format: ${lesson.id}`);
-                return;
-            }
+    //     lessons.forEach(lesson => {
+    //         // Проверяем, что ID соответствует формату A.B.C (Глава.Тема.Урок)
+    //         const idParts = lesson.id.split('.');
+    //         if (idParts.length !== 3) {
+    //             console.warn(`Invalid lesson ID format: ${lesson.id}`);
+    //             return;
+    //         }
             
-            const [chapter, topic, lessonNum] = idParts.map(Number);
+    //         const [chapter, topic, lessonNum] = idParts.map(Number);
             
-            // Находим или создаем курс
-            let course = this.courses.find(c => c.name === `Курс ${chapter}`);
-            if (!course) {
-                course = { name: `Курс ${chapter}`, chapters: [] };
-                this.courses.push(course);
-            }
+    //         // Находим или создаем курс
+    //         let course = this.courses.find(c => c.name === `Курс ${chapter}`);
+    //         if (!course) {
+    //             course = { name: `Курс ${chapter}`, chapters: [] };
+    //             this.courses.push(course);
+    //         }
             
-            // Находим или создаем главу
-            let chapterObj = course.chapters.find(ch => ch.number === chapter);
-            if (!chapterObj) {
-                chapterObj = { number: chapter, name: `Глава ${chapter}`, topics: [] };
-                course.chapters.push(chapterObj);
-            }
+    //         // Находим или создаем главу
+    //         let chapterObj = course.chapters.find(ch => ch.number === chapter);
+    //         if (!chapterObj) {
+    //             chapterObj = { number: chapter, name: `Глава ${chapter}`, topics: [] };
+    //             course.chapters.push(chapterObj);
+    //         }
             
-            // Находим или создаем тему
-            let topicObj = chapterObj.topics.find(t => t.number === topic);
-            if (!topicObj) {
-                topicObj = { 
-                    number: topic, 
-                    name: `Тема ${topic}`, 
-                    lessons: []
-                };
-                chapterObj.topics.push(topicObj);
-            }          
+    //         // Находим или создаем тему
+    //         let topicObj = chapterObj.topics.find(t => t.number === topic);
+    //         if (!topicObj) {
+    //             topicObj = { 
+    //                 number: topic, 
+    //                 name: `Тема ${topic}`, 
+    //                 lessons: []
+    //             };
+    //             chapterObj.topics.push(topicObj);
+    //         }          
 
             
-            // Добавляем урок
-            topicObj.lessons.push({
-                id: lesson.id,
-                number: lessonNum,
-                title: lesson.title,
-                content: lesson.content
-            });
-        });
+    //         // Добавляем урок
+    //         topicObj.lessons.push({
+    //             id: lesson.id,
+    //             number: lessonNum,
+    //             title: lesson.title,
+    //             content: lesson.content
+    //         });
+    //     });
         
-        // Сортируем структуру
-        this.courses.forEach(course => {
-            course.chapters.sort((a, b) => a.number - b.number);
-            course.chapters.forEach(chapter => {
-                chapter.topics.sort((a, b) => a.number - b.number);
-                chapter.topics.forEach(topic => {
-                    topic.lessons.sort((a, b) => a.number - b.number);
-                });
-            });
-        });
-    }
+    //     // Сортируем структуру
+    //     this.courses.forEach(course => {
+    //         course.chapters.sort((a, b) => a.number - b.number);
+    //         course.chapters.forEach(chapter => {
+    //             chapter.topics.sort((a, b) => a.number - b.number);
+    //             chapter.topics.forEach(topic => {
+    //                 topic.lessons.sort((a, b) => a.number - b.number);
+    //             });
+    //         });
+    //     });
+    // }
 
     renderCoursesList() {
         const lessonsContainer = document.getElementById('lessons-list');
@@ -154,18 +135,12 @@ export class EducationEditor {
                     <h2 class="accordion-header chapter">
                         <button class="accordion-button collapsed chapter" type="button" 
                                 data-bs-toggle="collapse" 
-                                data-bs-target="#collapseChapter${chapter.number}"
-                                aria-expanded="false" 
-                                aria-controls="collapseChapter${chapter.number}">
+                                data-bs-target="#collapseChapter${chapter.number}">
                             ${chapter.name}
                         </button>
                     </h2>
-                    <div id="collapseChapter${chapter.number}" 
-                         class="accordion-collapse collapse" 
-                         data-bs-parent="#chapter-${chapter.number}">
-
-                            ${chapter.topics.map(topic => this.createTopicElement(topic, chapter.number)).join('')}
-
+                    <div id="collapseChapter${chapter.number}" class="accordion-collapse collapse">
+                        ${chapter.topics.map(topic => this.createTopicElement(topic, chapter.number)).join('')}
                     </div>
                 </div>
             </div>
@@ -179,18 +154,12 @@ export class EducationEditor {
                     <h2 class="accordion-header topic">
                         <button class="accordion-button collapsed topic" type="button" 
                                 data-bs-toggle="collapse" 
-                                data-bs-target="#collapseTopic${chapterNumber}-${topic.number}"
-                                aria-expanded="false" 
-                                aria-controls="collapseTopic${chapterNumber}-${topic.number}">
+                                data-bs-target="#collapseTopic${chapterNumber}-${topic.number}">
                             ${topic.name}
                         </button>
                     </h2>
-                    <div id="collapseTopic${chapterNumber}-${topic.number}" 
-                         class="accordion-collapse collapse" 
-                         data-bs-parent="#topic-${chapterNumber}-${topic.number}">
-
-                            ${topic.lessons.map(lesson => this.createLessonElement(lesson)).join('')}
-
+                    <div id="collapseTopic${chapterNumber}-${topic.number}" class="accordion-collapse collapse">
+                        ${topic.lessons.map(lesson => this.createLessonElement(lesson)).join('')}
                     </div>
                 </div>
             </div>
@@ -199,21 +168,35 @@ export class EducationEditor {
 
     createLessonElement(lesson) {
         return `
-            <div class="lesson-item d-flex justify-content-between align-items-center" id="lesson-${lesson.id}">
+            <div class="lesson-item d-flex justify-content-between align-items-center">
                 <div class="lesson-info flex-grow-1 view-lesson" data-id="${lesson.id}">
-                    
-                    <span class="lesson-title" >${lesson.title}</span>
+                    <span class="lesson-title">${lesson.title}</span>
                 </div>
                 <div class="lesson-actions ms-2">
-                    <button class="btn btn-sm btn-outline-secondary edit-lesson" data-id="${lesson.id}" title="Редактировать">
+                    <button class="btn btn-sm btn-outline-secondary edit-lesson" data-id="${lesson.id}">
                         <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-danger delete-lesson" data-id="${lesson.id}" title="Удалить">
+                    <button class="btn btn-sm btn-outline-danger delete-lesson" data-id="${lesson.id}">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
             </div>
         `;
+    }
+
+    setupLessonEventListeners() {
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.view-lesson')) {
+                const lessonId = e.target.closest('.view-lesson').dataset.id;
+                this.viewLesson(lessonId);
+            } else if (e.target.closest('.edit-lesson')) {
+                const lessonId = e.target.closest('.edit-lesson').dataset.id;
+                this.editLesson(lessonId);
+            } else if (e.target.closest('.delete-lesson')) {
+                const lessonId = e.target.closest('.delete-lesson').dataset.id;
+                this.deleteLesson(lessonId);
+            }
+        });
     }
 
     async viewLesson(lessonId) {
@@ -237,13 +220,7 @@ export class EducationEditor {
     }
 
     async editLesson(lessonId) {
-        try {
-            const lesson = await window.electronAPI.getLesson(lessonId);
-            this.currentLessonId = lessonId;
-            this.showLessonModal(lesson);
-        } catch (error) {
-            console.error('Error edit lesson:', error);
-        }
+        await window.electronAPI.openMakeLessonWindow();
     }
 
     async deleteLesson(lessonId) {

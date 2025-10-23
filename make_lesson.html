@@ -56,9 +56,16 @@
 
     <script src="src\make-lesson\make-lesson-manager.js" type="module"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+    <!-- <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const { MakeLessonManager } = await import('./src/make-lesson/make-lesson-manager.js');
+            new MakeLessonManager();
+        });
+    </script> -->
+    <script type="module">
+        import { MakeLessonManager } from './src/make-lesson/make-lesson-manager.js';
+        
+        document.addEventListener('DOMContentLoaded', async () => {
             new MakeLessonManager();
         });
     </script>
